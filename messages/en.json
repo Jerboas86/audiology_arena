@@ -1,4 +1,25 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from en!"
+	"hello_world": "Hello, {name} from en!",
+	"home_meta_description": "Compare two audio samples, vote for the strongest option, and move from round to round with clarity.",
+	"home_tagline": "Critical listening, one round at a time",
+	"home_eyebrow": "Round in progress",
+	"home_heading": "Pick the strongest listening sample without distractions.",
+	"home_intro": "Run a clean A/B comparison, hear both clips in full, then cast a single vote once both playbacks are complete.",
+	"home_round_label": "Current matchup",
+	"home_round_title": "Le bouchon",
+	"home_round_meta_players": "Two players",
+	"home_round_meta_winner": "One winner",
+	"home_round_meta_rule": "Mandatory full playback",
+	"home_result_label": "Vote recorded",
+	"home_result_heading": "Round complete.",
+	"home_result_body": "Reset the stage and move on when you're ready for the next comparison.",
+	"home_next_round": "Next round",
+	"home_player_a": "Player A",
+	"home_player_b": "Player B",
+	"home_status_listen": "Listen fully",
+	"home_status_complete": "Playback complete",
+	"home_vote_a": "Vote for A",
+	"home_vote_b": "Vote for B",
+	"home_footnote": "Voting unlocks only after both clips finish playing."
 }

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import * as m from '$lib/paraglide/messages';
+
 	let voted = $state(false);
 	let playedA = $state(false);
 	let playedB = $state(false);
@@ -19,15 +21,41 @@
 	}
 </script>
 
-<main>
-	<div class="text-container">
-		<div class="text">Le bouchon</div>
-	</div>
+<main class="arena">
+	<section class="hero">
+		<div class="hero-copy">
+			<p class="eyebrow">{m.home_eyebrow()}</p>
+			<h1>{m.home_heading()}</h1>
+			<p class="intro">{m.home_intro()}</p>
+		</div>
+
+		<div class="round-card">
+			<div class="round-label">{m.home_round_label()}</div>
+			<div class="round-title">{m.home_round_title()}</div>
+			<div class="round-meta">
+				<span>{m.home_round_meta_players()}</span>
+				<span>{m.home_round_meta_winner()}</span>
+				<span>{m.home_round_meta_rule()}</span>
+			</div>
+		</div>
+	</section>
+
 	{#if voted}
-		<button class="next" onclick={nextRound}>Next round</button>
+		<section class="result-card">
+			<p class="result-label">{m.home_result_label()}</p>
+			<h2>{m.home_result_heading()}</h2>
+			<p>{m.home_result_body()}</p>
+			<button class="next" onclick={nextRound}>{m.home_next_round()}</button>
+		</section>
 	{:else}
-		<div class="fight">
+		<section class="battlefield">
 			<div class="player">
+				<div class="player-header">
+					<p class="player-label">{m.home_player_a()}</p>
+					<p class:ready={playedA} class="status">
+						{playedA ? m.home_status_complete() : m.home_status_listen()}
+					</p>
+				</div>
 				<audio
 					controls
 					src=""
@@ -35,9 +63,17 @@
 						playedA = true;
 					}}
 				></audio>
-				<button disabled={!(playedA && playedB)} onclick={voteFor('A')}>Vote for A</button>
+				<button class="vote" disabled={!(playedA && playedB)} onclick={voteFor('A')}>
+					{m.home_vote_a()}
+				</button>
 			</div>
-			<div class="player">
+			<div class="player accent">
+				<div class="player-header">
+					<p class="player-label">{m.home_player_b()}</p>
+					<p class:ready={playedB} class="status">
+						{playedB ? m.home_status_complete() : m.home_status_listen()}
+					</p>
+				</div>
 				<audio
 					controls
 					src=""
@@ -45,43 +81,208 @@
 						playedB = true;
 					}}
 				></audio>
-				<button disabled={!(playedA && playedB)} onclick={voteFor('B')}>Vote for B</button>
+				<button class="vote" disabled={!(playedA && playedB)} onclick={voteFor('B')}>
+					{m.home_vote_b()}
+				</button>
 			</div>
-		</div>
+		</section>
+
+		<p class="footnote">{m.home_footnote()}</p>
 	{/if}
 </main>
 
 <style>
-	.text-container {
-		margin: 16px;
+	.arena {
 		display: flex;
-		gap: 8px;
-		justify-content: center;
+		flex-direction: column;
+		gap: 28px;
 	}
 
-	.text {
-		border: 1px solid black;
-		padding: 4px;
-		border-radius: 4px;
-	}
-
-	.fight {
+	.hero {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
-		justify-items: center;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 24px;
+		align-items: stretch;
+	}
+
+	.hero-copy,
+	.round-card,
+	.player,
+	.result-card {
+		border: 1px solid rgba(30, 27, 22, 0.12);
+		border-radius: 28px;
+		background: rgba(255, 251, 245, 0.72);
+		box-shadow: 0 24px 60px rgba(84, 54, 19, 0.12);
+		backdrop-filter: blur(18px);
+	}
+
+	.hero-copy {
+		padding: clamp(24px, 4vw, 42px);
+	}
+
+	.eyebrow,
+	.round-label,
+	.result-label,
+	.player-label,
+	.status,
+	.footnote {
+		margin: 0;
+		text-transform: uppercase;
+		letter-spacing: 0.14em;
+		font-size: 0.8rem;
+	}
+
+	h1,
+	h2 {
+		margin: 0;
+		letter-spacing: -0.04em;
+	}
+
+	h1 {
+		font-size: clamp(2.4rem, 5vw, 4.8rem);
+		line-height: 0.95;
+		max-width: 12ch;
+	}
+
+	h2 {
+		font-size: clamp(2rem, 4vw, 3rem);
+	}
+
+	.intro,
+	.result-card p {
+		font-size: 1.05rem;
+		line-height: 1.6;
+		max-width: 58ch;
+		color: rgba(30, 27, 22, 0.82);
+	}
+
+	.round-card {
+		width: min(100%, 52rem);
+		margin: 0 auto;
+		padding: 28px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: 18px;
+		background:
+			linear-gradient(180deg, rgba(193, 107, 39, 0.9), rgba(120, 66, 28, 0.92)),
+			radial-gradient(circle at top, rgba(255, 230, 193, 0.35), transparent 45%);
+		color: #fff9f2;
+	}
+
+	.round-title {
+		font-size: clamp(2.4rem, 4vw, 3.6rem);
+		font-weight: 800;
+		letter-spacing: -0.05em;
+	}
+
+	.round-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.round-meta span {
+		padding: 10px 14px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.16);
+		font-size: 0.9rem;
+	}
+
+	.battlefield {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 20px;
 	}
 
 	.player {
 		display: grid;
-		gap: 8px;
+		padding: 24px;
+		gap: 18px;
+	}
+
+	.accent {
+		background:
+			linear-gradient(180deg, rgba(255, 251, 245, 0.8), rgba(242, 231, 213, 0.96)),
+			rgba(255, 251, 245, 0.72);
+	}
+
+	.player-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
+	.player-label {
+		font-size: 1.1rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+	}
+
+	.status {
+		color: rgba(30, 27, 22, 0.58);
+	}
+
+	.ready {
+		color: #2c7a52;
 	}
 
 	audio {
-		height: 40px;
+		width: 100%;
+		height: 48px;
 	}
 
+	.vote,
 	.next {
-		display: block;
-		margin: auto;
+		border: 0;
+		border-radius: 16px;
+		padding: 14px 18px;
+		font-size: 1rem;
+		font-weight: 700;
+		color: #fff8ef;
+		background: linear-gradient(135deg, #1f1a14, #5f3b1f);
+		cursor: pointer;
+		transition:
+			transform 160ms ease,
+			opacity 160ms ease,
+			box-shadow 160ms ease;
+		box-shadow: 0 16px 30px rgba(43, 27, 13, 0.2);
+	}
+
+	.vote:hover:not(:disabled),
+	.next:hover {
+		transform: translateY(-1px);
+	}
+
+	.vote:disabled {
+		cursor: not-allowed;
+		opacity: 0.45;
+		box-shadow: none;
+	}
+
+	.result-card {
+		padding: clamp(28px, 4vw, 40px);
+		text-align: center;
+		display: grid;
+		justify-items: center;
+		gap: 12px;
+	}
+
+	.footnote {
+		color: rgba(30, 27, 22, 0.6);
+		text-align: center;
+	}
+
+	@media (max-width: 860px) {
+		.hero,
+		.battlefield {
+			grid-template-columns: 1fr;
+		}
+
+		.player-header {
+			flex-direction: column;
+			align-items: flex-start;
+		}
 	}
 </style>

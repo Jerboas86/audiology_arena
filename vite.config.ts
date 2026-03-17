@@ -4,16 +4,22 @@ import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import { sveltekit } from '@sveltejs/kit/vite';
 
+const ignoredProjectPaths = ['**/.pnpm-store/**'];
+
 export default defineConfig({
 	plugins: [
 		sveltekit(),
 		devtoolsJson(),
 		paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' })
 	],
-
+	server: {
+		watch: {
+			ignored: ignoredProjectPaths
+		}
+	},
 	test: {
 		expect: { requireAssertions: true },
-		exclude: ['.pnpm-store/**'],
+		exclude: ignoredProjectPaths,
 
 		projects: [
 			{
