@@ -13,6 +13,7 @@ export default defineConfig({
 
 	test: {
 		expect: { requireAssertions: true },
+		exclude: ['.pnpm-store/**'],
 
 		projects: [
 			{
