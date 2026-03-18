@@ -1,6 +1,5 @@
 import {
 	pgSchema,
-	pgEnum,
 	text,
 	varchar,
 	integer,
@@ -36,7 +35,11 @@ export const wordLists = audSchema.table(
 		language: langCodeEnum('language').notNull()
 	},
 	(t) => [
-		unique('word_lists_list_name_list_number_language_key').on(t.listName, t.listNumber, t.language),
+		unique('word_lists_list_name_list_number_language_key').on(
+			t.listName,
+			t.listNumber,
+			t.language
+		),
 		check('list_name_is_lower_alpha', sql`${t.listName} ~ '[a-z]+'`),
 		check('list_type_is_lower_alpha', sql`${t.listType} ~ '[a-z]+'`),
 		check('non_negative_list_number', sql`${t.listNumber} >= 0`)
@@ -51,7 +54,10 @@ export const tokens = audSchema.table(
 			.notNull()
 			.references(() => wordLists.listId, { onDelete: 'cascade' }),
 		language: langCodeEnum('language').notNull(),
-		homonyms: text('homonyms').array().notNull().default(sql`'{}'`),
+		homonyms: text('homonyms')
+			.array()
+			.notNull()
+			.default(sql`'{}'`),
 		definiteArticle: text('definite_article').notNull().default(''),
 		indefiniteArticle: text('indefinite_article').notNull().default(''),
 		createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()

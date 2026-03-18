@@ -1,24 +1,34 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages';
+	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
+
+	let { data = { matchup: null, matchupError: false } } = $props();
 
 	let voted = $state(false);
 	let playedA = $state(false);
 	let playedB = $state(false);
 
-	type Player = 'A' | 'B';
-
-	function voteFor(player: Player): () => void {
-		return () => {
-			voted = true;
-			console.log(`The winner is ${player}`);
+	function handleVote() {
+		return async ({ result }: { result: { type: string } }) => {
+			if (result.type === 'success') {
+				voted = true;
+			}
 		};
 	}
 
-	function nextRound() {
+	async function nextRound() {
 		voted = false;
 		playedA = false;
 		playedB = false;
+		await invalidateAll();
 	}
+
+	const matchup = $derived(data.matchup ?? null);
+	const sideA = $derived(matchup?.sideA ?? null);
+	const sideB = $derived(matchup?.sideB ?? null);
+	const audioUnavailable = $derived(!matchup || data.matchupError);
+	const canVote = $derived(Boolean(matchup) && playedA && playedB);
 </script>
 
 <main class="arena">
@@ -48,46 +58,79 @@
 			<button class="next" onclick={nextRound}>{m.home_next_round()}</button>
 		</section>
 	{:else}
+		{@const matchup = data.matchup}
 		<section class="battlefield">
-			<div class="player">
-				<div class="player-header">
-					<p class="player-label">{m.home_player_a()}</p>
-					<p class:ready={playedA} class="status">
-						{playedA ? m.home_status_complete() : m.home_status_listen()}
-					</p>
+			<form method="POST" action="?/vote" use:enhance={handleVote}>
+				<input type="hidden" name="token" value={matchup?.token ?? ''} />
+				<input type="hidden" name="listId" value={matchup?.listId ?? ''} />
+				<input type="hidden" name="language" value={matchup?.language ?? ''} />
+				<input type="hidden" name="orgSlugA" value={sideA?.orgSlug ?? ''} />
+				<input type="hidden" name="modelNameA" value={sideA?.modelName ?? ''} />
+				<input type="hidden" name="voiceIdA" value={sideA?.voiceId ?? ''} />
+				<input type="hidden" name="orgSlugB" value={sideB?.orgSlug ?? ''} />
+				<input type="hidden" name="modelNameB" value={sideB?.modelName ?? ''} />
+				<input type="hidden" name="voiceIdB" value={sideB?.voiceId ?? ''} />
+
+				<div class="players">
+					<div class="player">
+						<div class="player-header">
+							<p class="player-label">{m.home_player_a()}</p>
+							<p
+								class:ready={playedA && !audioUnavailable}
+								class:unavailable={audioUnavailable}
+								class="status"
+							>
+								{audioUnavailable
+									? m.home_status_unavailable()
+									: playedA
+										? m.home_status_complete()
+										: m.home_status_listen()}
+							</p>
+						</div>
+						<audio
+							controls
+							src={sideA?.audioUrl}
+							onended={() => {
+								if (!audioUnavailable) playedA = true;
+							}}
+						></audio>
+						<button class="vote" name="winner" value="a" disabled={!canVote}>
+							{m.home_vote_a()}
+						</button>
+					</div>
+					<div class="player accent">
+						<div class="player-header">
+							<p class="player-label">{m.home_player_b()}</p>
+							<p
+								class:ready={playedB && !audioUnavailable}
+								class:unavailable={audioUnavailable}
+								class="status"
+							>
+								{audioUnavailable
+									? m.home_status_unavailable()
+									: playedB
+										? m.home_status_complete()
+										: m.home_status_listen()}
+							</p>
+						</div>
+						<audio
+							controls
+							src={sideB?.audioUrl}
+							onended={() => {
+								if (!audioUnavailable) playedB = true;
+							}}
+						></audio>
+						<button class="vote" name="winner" value="b" disabled={!canVote}>
+							{m.home_vote_b()}
+						</button>
+					</div>
 				</div>
-				<audio
-					controls
-					src=""
-					onended={() => {
-						playedA = true;
-					}}
-				></audio>
-				<button class="vote" disabled={!(playedA && playedB)} onclick={voteFor('A')}>
-					{m.home_vote_a()}
-				</button>
-			</div>
-			<div class="player accent">
-				<div class="player-header">
-					<p class="player-label">{m.home_player_b()}</p>
-					<p class:ready={playedB} class="status">
-						{playedB ? m.home_status_complete() : m.home_status_listen()}
-					</p>
-				</div>
-				<audio
-					controls
-					src=""
-					onended={() => {
-						playedB = true;
-					}}
-				></audio>
-				<button class="vote" disabled={!(playedA && playedB)} onclick={voteFor('B')}>
-					{m.home_vote_b()}
-				</button>
-			</div>
+			</form>
 		</section>
 
-		<p class="footnote">{m.home_footnote()}</p>
+		<p class="footnote">
+			{audioUnavailable ? m.home_footnote_unavailable() : m.home_footnote()}
+		</p>
 	{/if}
 </main>
 
@@ -189,7 +232,11 @@
 		font-size: 0.9rem;
 	}
 
-	.battlefield {
+	.battlefield form {
+		display: contents;
+	}
+
+	.players {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 20px;
@@ -226,6 +273,10 @@
 
 	.ready {
 		color: #2c7a52;
+	}
+
+	.unavailable {
+		color: #8f4b22;
 	}
 
 	audio {
@@ -276,7 +327,7 @@
 
 	@media (max-width: 860px) {
 		.hero,
-		.battlefield {
+		.players {
 			grid-template-columns: 1fr;
 		}
 

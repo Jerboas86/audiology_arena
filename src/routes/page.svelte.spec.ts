@@ -26,4 +26,26 @@ describe('/+page.svelte', () => {
 		await expect.element(page.getByRole('button', { name: 'Voter pour A' })).toBeDisabled();
 		await expect.element(page.getByRole('button', { name: 'Voter pour B' })).toBeDisabled();
 	});
+
+	it('keeps both audio controls visible when matchup data is unavailable', async () => {
+		setLocale('en', { reload: false });
+		render(Page, {
+			data: {
+				matchup: null,
+				matchupError: true
+			}
+		});
+
+		await expect.element(page.getByText('Audio unavailable').first()).toBeInTheDocument();
+		await expect.element(page.getByRole('button', { name: 'Vote for A' })).toBeDisabled();
+		await expect.element(page.getByRole('button', { name: 'Vote for B' })).toBeDisabled();
+		await expect
+			.element(
+				page.getByText(
+					'Audio controls stay visible even when the matchup data is unavailable. Voting remains locked until audio loads correctly.'
+				)
+			)
+			.toBeInTheDocument();
+		expect(document.querySelectorAll('audio')).toHaveLength(2);
+	});
 });

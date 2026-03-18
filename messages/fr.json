@@ -19,7 +19,9 @@
 	"home_player_b": "Joueur B",
 	"home_status_listen": "Ecouter jusqu'au bout",
 	"home_status_complete": "Lecture terminee",
+	"home_status_unavailable": "Audio indisponible",
 	"home_vote_a": "Voter pour A",
 	"home_vote_b": "Voter pour B",
-	"home_footnote": "Le vote se debloque uniquement apres l'ecoute complete des deux extraits."
+	"home_footnote": "Le vote se debloque uniquement apres l'ecoute complete des deux extraits.",
+	"home_footnote_unavailable": "Les controles audio restent visibles meme si les donnees du duel sont indisponibles. Le vote reste bloque tant que l'audio ne se charge pas correctement."
 }

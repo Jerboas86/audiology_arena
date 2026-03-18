@@ -1,13 +1,6 @@
-import { eq, sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import type { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import {
-	comparisons,
-	eloVoice,
-	eloModel,
-	eloOrg,
-	eloHistory,
-	langCodeEnum
-} from './db/schema';
+import { comparisons, eloVoice, eloModel, eloOrg, eloHistory, langCodeEnum } from './db/schema';
 import type * as schema from './db/schema';
 
 const K = 32;
@@ -84,8 +77,7 @@ export async function recordComparison(db: DB, input: ComparisonInput) {
 	);
 
 	// 3. Update model-level ELO (skip if same model)
-	const sameModel =
-		sideA.orgSlug === sideB.orgSlug && sideA.modelName === sideB.modelName;
+	const sameModel = sideA.orgSlug === sideB.orgSlug && sideA.modelName === sideB.modelName;
 	if (!sameModel) {
 		const modelRatings = await updateModelElo(db, winnerSide, loserSide, language);
 		historyEntries.push(
@@ -298,15 +290,11 @@ async function updateOrgElo(
 	const [winnerRow] = await db
 		.select({ rating: eloOrg.rating })
 		.from(eloOrg)
-		.where(
-			sql`${eloOrg.orgSlug} = ${winner.orgSlug} AND ${eloOrg.language} = ${language}`
-		);
+		.where(sql`${eloOrg.orgSlug} = ${winner.orgSlug} AND ${eloOrg.language} = ${language}`);
 	const [loserRow] = await db
 		.select({ rating: eloOrg.rating })
 		.from(eloOrg)
-		.where(
-			sql`${eloOrg.orgSlug} = ${loser.orgSlug} AND ${eloOrg.language} = ${language}`
-		);
+		.where(sql`${eloOrg.orgSlug} = ${loser.orgSlug} AND ${eloOrg.language} = ${language}`);
 
 	const winnerCurrent = winnerRow?.rating ?? DEFAULT_RATING;
 	const loserCurrent = loserRow?.rating ?? DEFAULT_RATING;

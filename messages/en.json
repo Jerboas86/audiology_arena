@@ -19,7 +19,9 @@
 	"home_player_b": "Player B",
 	"home_status_listen": "Listen fully",
 	"home_status_complete": "Playback complete",
+	"home_status_unavailable": "Audio unavailable",
 	"home_vote_a": "Vote for A",
 	"home_vote_b": "Vote for B",
-	"home_footnote": "Voting unlocks only after both clips finish playing."
+	"home_footnote": "Voting unlocks only after both clips finish playing.",
+	"home_footnote_unavailable": "Audio controls stay visible even when the matchup data is unavailable. Voting remains locked until audio loads correctly."
 }
