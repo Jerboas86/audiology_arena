@@ -3,7 +3,11 @@ import { getEloLeaderboards, type EloLanguage, type EloLeaderboardGroup } from '
 import { langCodeEnum } from '$lib/server/db/schema';
 import type { PageServerLoad } from './$types';
 
-const leaderboardGroups = ['org', 'model', 'voice'] as const satisfies readonly EloLeaderboardGroup[];
+const leaderboardGroups = [
+	'org',
+	'model',
+	'voice'
+] as const satisfies readonly EloLeaderboardGroup[];
 const languages = langCodeEnum.enumValues;
 
 export const load: PageServerLoad = async ({ url }) => {

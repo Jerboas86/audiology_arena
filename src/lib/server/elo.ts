@@ -236,7 +236,10 @@ export async function getEloLeaderboards(db: DB, language?: EloLanguage): Promis
 		})
 		.from(eloVoice)
 		.innerJoin(organisations, eq(organisations.slug, eloVoice.orgSlug))
-		.innerJoin(voices, and(eq(voices.orgSlug, eloVoice.orgSlug), eq(voices.voiceId, eloVoice.voiceId)));
+		.innerJoin(
+			voices,
+			and(eq(voices.orgSlug, eloVoice.orgSlug), eq(voices.voiceId, eloVoice.voiceId))
+		);
 
 	const [orgs, modelsBoard, voicesBoard] = await Promise.all([
 		(language ? orgBaseQuery.where(eq(eloOrg.language, language)) : orgBaseQuery).orderBy(
@@ -244,19 +247,13 @@ export async function getEloLeaderboards(db: DB, language?: EloLanguage): Promis
 			desc(eloOrg.numComparisons),
 			asc(organisations.name)
 		),
-		(language
-			? modelBaseQuery.where(eq(eloModel.language, language))
-			: modelBaseQuery
-		).orderBy(
+		(language ? modelBaseQuery.where(eq(eloModel.language, language)) : modelBaseQuery).orderBy(
 			desc(eloModel.rating),
 			desc(eloModel.numComparisons),
 			asc(organisations.name),
 			asc(eloModel.modelName)
 		),
-		(language
-			? voiceBaseQuery.where(eq(eloVoice.language, language))
-			: voiceBaseQuery
-		).orderBy(
+		(language ? voiceBaseQuery.where(eq(eloVoice.language, language)) : voiceBaseQuery).orderBy(
 			desc(eloVoice.rating),
 			desc(eloVoice.numComparisons),
 			asc(organisations.name),

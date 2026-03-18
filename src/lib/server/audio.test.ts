@@ -5,7 +5,7 @@ import {
 	buildS3AudioUrl,
 	encodeS3ObjectKeyForUrl,
 	parseStoredS3AudioUri,
-	resolveS3AudioUrl,
+	resolveS3AudioUrl
 } from './audio';
 
 describe('audio helpers', () => {
@@ -61,9 +61,7 @@ describe('audio helpers', () => {
 			fetchImpl
 		);
 
-		expect(url).toBe(
-			'https://bucket.s3.us-east-1.amazonaws.com/fr-FR/acme/demo/voice-a/salut.wav'
-		);
+		expect(url).toBe('https://bucket.s3.us-east-1.amazonaws.com/fr-FR/acme/demo/voice-a/salut.wav');
 		expect(fetchImpl).toHaveBeenCalledTimes(2);
 	});
 
@@ -88,13 +86,15 @@ describe('audio helpers', () => {
 	it('builds an internal proxy URL for a stored s3 uri', () => {
 		const url = buildAudioProxyUrl('s3://audio-bucket/fr-FR/acme/demo/voice-a/salut.wav');
 
-		expect(url).toBe('/audio?uri=s3%3A%2F%2Faudio-bucket%2Ffr-FR%2Facme%2Fdemo%2Fvoice-a%2Fsalut.wav');
+		expect(url).toBe(
+			'/audio?uri=s3%3A%2F%2Faudio-bucket%2Ffr-FR%2Facme%2Fdemo%2Fvoice-a%2Fsalut.wav'
+		);
 	});
 
 	it('encodes S3 keys for browser-facing URLs', () => {
-		expect(encodeS3ObjectKeyForUrl('fr-FR/aws/polly/Lea/Ainsi, cette comédie est en un acte..mp3')).toBe(
-			'fr-FR/aws/polly/Lea/Ainsi%2C%20cette%20com%C3%A9die%20est%20en%20un%20acte..mp3'
-		);
+		expect(
+			encodeS3ObjectKeyForUrl('fr-FR/aws/polly/Lea/Ainsi, cette comédie est en un acte..mp3')
+		).toBe('fr-FR/aws/polly/Lea/Ainsi%2C%20cette%20com%C3%A9die%20est%20en%20un%20acte..mp3');
 	});
 
 	it('returns null when no object matches', async () => {

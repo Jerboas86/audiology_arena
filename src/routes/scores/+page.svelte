@@ -254,5 +254,4 @@
 	tbody tr:hover {
 		background: rgba(250, 238, 217, 0.5);
 	}
-
 </style>

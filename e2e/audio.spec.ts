@@ -10,43 +10,46 @@ type AudioProbeResult = {
 };
 
 async function probeAudio(page: Parameters<typeof test>[0]['page'], index: number) {
-	return page.locator('audio').nth(index).evaluate(async (node) => {
-		const audio = node as HTMLAudioElement;
+	return page
+		.locator('audio')
+		.nth(index)
+		.evaluate(async (node) => {
+			const audio = node as HTMLAudioElement;
 
-		const snapshot = (event: AudioProbeResult['event']): AudioProbeResult => ({
-			src: audio.getAttribute('src'),
-			currentSrc: audio.currentSrc,
-			readyState: audio.readyState,
-			networkState: audio.networkState,
-			errorCode: audio.error?.code ?? null,
-			event
-		});
+			const snapshot = (event: AudioProbeResult['event']): AudioProbeResult => ({
+				src: audio.getAttribute('src'),
+				currentSrc: audio.currentSrc,
+				readyState: audio.readyState,
+				networkState: audio.networkState,
+				errorCode: audio.error?.code ?? null,
+				event
+			});
 
-		if (audio.readyState >= HTMLMediaElement.HAVE_METADATA) {
-			return snapshot('loadedmetadata');
-		}
-
-		audio.load();
-
-		return await new Promise<AudioProbeResult>((resolve) => {
-			const onLoadedMetadata = () => done(snapshot('loadedmetadata'));
-			const onCanPlay = () => done(snapshot('canplay'));
-			const onError = () => done(snapshot('error'));
-			const timeout = window.setTimeout(() => done(snapshot('timeout')), 10_000);
-
-			function done(result: AudioProbeResult) {
-				audio.removeEventListener('loadedmetadata', onLoadedMetadata);
-				audio.removeEventListener('canplay', onCanPlay);
-				audio.removeEventListener('error', onError);
-				window.clearTimeout(timeout);
-				resolve(result);
+			if (audio.readyState >= HTMLMediaElement.HAVE_METADATA) {
+				return snapshot('loadedmetadata');
 			}
 
-			audio.addEventListener('loadedmetadata', onLoadedMetadata, { once: true });
-			audio.addEventListener('canplay', onCanPlay, { once: true });
-			audio.addEventListener('error', onError, { once: true });
+			audio.load();
+
+			return await new Promise<AudioProbeResult>((resolve) => {
+				const onLoadedMetadata = () => done(snapshot('loadedmetadata'));
+				const onCanPlay = () => done(snapshot('canplay'));
+				const onError = () => done(snapshot('error'));
+				const timeout = window.setTimeout(() => done(snapshot('timeout')), 10_000);
+
+				function done(result: AudioProbeResult) {
+					audio.removeEventListener('loadedmetadata', onLoadedMetadata);
+					audio.removeEventListener('canplay', onCanPlay);
+					audio.removeEventListener('error', onError);
+					window.clearTimeout(timeout);
+					resolve(result);
+				}
+
+				audio.addEventListener('loadedmetadata', onLoadedMetadata, { once: true });
+				audio.addEventListener('canplay', onCanPlay, { once: true });
+				audio.addEventListener('error', onError, { once: true });
+			});
 		});
-	});
 }
 
 test('home page exposes loadable audio sources for both players', async ({ page }) => {
@@ -56,10 +59,13 @@ test('home page exposes loadable audio sources for both players', async ({ page 
 	await expect(page.locator('audio')).toHaveCount(2);
 
 	for (const index of [0, 1]) {
-		const src = await page.locator('audio').nth(index).evaluate((node) => {
-			const audio = node as HTMLAudioElement;
-			return audio.currentSrc || audio.src || audio.getAttribute('src');
-		});
+		const src = await page
+			.locator('audio')
+			.nth(index)
+			.evaluate((node) => {
+				const audio = node as HTMLAudioElement;
+				return audio.currentSrc || audio.src || audio.getAttribute('src');
+			});
 
 		expect(src).toBeTruthy();
 		expect(src).toMatch(/^https?:\/\//);
