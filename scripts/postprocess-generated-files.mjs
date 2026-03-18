@@ -58,11 +58,15 @@ async function addTsNoCheckToGeneratedJs() {
 		files.map(async (file) => {
 			const source = await readFile(file, 'utf8');
 
-			if (source.startsWith('// @ts-nocheck\n') || source.startsWith('// @ts-nocheck\r\n')) {
+			if (source.includes('// @ts-nocheck')) {
 				return;
 			}
 
-			await writeFile(file, `// @ts-nocheck\n${source}`);
+			const updated = source.startsWith('/* eslint-disable */')
+				? source.replace('/* eslint-disable */', '/* eslint-disable */\n// @ts-nocheck')
+				: `// @ts-nocheck\n${source}`;
+
+			await writeFile(file, updated);
 		})
 	);
 }

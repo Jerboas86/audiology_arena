@@ -1,6 +1,16 @@
-import { sql } from 'drizzle-orm';
+import { and, asc, desc, eq, sql } from 'drizzle-orm';
 import type { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import { comparisons, eloVoice, eloModel, eloOrg, eloHistory, langCodeEnum } from './db/schema';
+import {
+	comparisons,
+	eloVoice,
+	eloModel,
+	eloOrg,
+	eloHistory,
+	langCodeEnum,
+	models,
+	organisations,
+	voices
+} from './db/schema';
 import type * as schema from './db/schema';
 
 const K = 32;
@@ -24,6 +34,52 @@ export type ComparisonInput = {
 };
 
 type DB = NeonHttpDatabase<typeof schema>;
+
+export type EloLanguage = (typeof langCodeEnum.enumValues)[number];
+export type EloLeaderboardGroup = 'org' | 'model' | 'voice';
+
+export type EloOrgLeaderboardRow = {
+	orgSlug: string;
+	orgName: string;
+	language: EloLanguage;
+	rating: number;
+	numComparisons: number;
+	numWins: number;
+	numLosses: number;
+	updatedAt: Date;
+};
+
+export type EloModelLeaderboardRow = {
+	orgSlug: string;
+	orgName: string;
+	modelName: string;
+	language: EloLanguage;
+	rating: number;
+	numComparisons: number;
+	numWins: number;
+	numLosses: number;
+	updatedAt: Date;
+};
+
+export type EloVoiceLeaderboardRow = {
+	orgSlug: string;
+	orgName: string;
+	modelName: string;
+	voiceId: string;
+	voiceName: string;
+	language: EloLanguage;
+	rating: number;
+	numComparisons: number;
+	numWins: number;
+	numLosses: number;
+	updatedAt: Date;
+};
+
+export type EloLeaderboards = {
+	orgs: EloOrgLeaderboardRow[];
+	models: EloModelLeaderboardRow[];
+	voices: EloVoiceLeaderboardRow[];
+};
 
 export async function recordComparison(db: DB, input: ComparisonInput) {
 	const { sideA, sideB, winner, token, listId, language } = input;
@@ -128,6 +184,92 @@ export async function recordComparison(db: DB, input: ComparisonInput) {
 	}
 
 	return { comparisonId };
+}
+
+export async function getEloLeaderboards(db: DB, language?: EloLanguage): Promise<EloLeaderboards> {
+	const orgBaseQuery = db
+		.select({
+			orgSlug: eloOrg.orgSlug,
+			orgName: organisations.name,
+			language: eloOrg.language,
+			rating: eloOrg.rating,
+			numComparisons: eloOrg.numComparisons,
+			numWins: eloOrg.numWins,
+			numLosses: eloOrg.numLosses,
+			updatedAt: eloOrg.updatedAt
+		})
+		.from(eloOrg)
+		.innerJoin(organisations, eq(organisations.slug, eloOrg.orgSlug));
+
+	const modelBaseQuery = db
+		.select({
+			orgSlug: eloModel.orgSlug,
+			orgName: organisations.name,
+			modelName: eloModel.modelName,
+			language: eloModel.language,
+			rating: eloModel.rating,
+			numComparisons: eloModel.numComparisons,
+			numWins: eloModel.numWins,
+			numLosses: eloModel.numLosses,
+			updatedAt: eloModel.updatedAt
+		})
+		.from(eloModel)
+		.innerJoin(organisations, eq(organisations.slug, eloModel.orgSlug))
+		.innerJoin(
+			models,
+			and(eq(models.orgSlug, eloModel.orgSlug), eq(models.name, eloModel.modelName))
+		);
+
+	const voiceBaseQuery = db
+		.select({
+			orgSlug: eloVoice.orgSlug,
+			orgName: organisations.name,
+			modelName: eloVoice.modelName,
+			voiceId: eloVoice.voiceId,
+			voiceName: voices.voiceName,
+			language: eloVoice.language,
+			rating: eloVoice.rating,
+			numComparisons: eloVoice.numComparisons,
+			numWins: eloVoice.numWins,
+			numLosses: eloVoice.numLosses,
+			updatedAt: eloVoice.updatedAt
+		})
+		.from(eloVoice)
+		.innerJoin(organisations, eq(organisations.slug, eloVoice.orgSlug))
+		.innerJoin(voices, and(eq(voices.orgSlug, eloVoice.orgSlug), eq(voices.voiceId, eloVoice.voiceId)));
+
+	const [orgs, modelsBoard, voicesBoard] = await Promise.all([
+		(language ? orgBaseQuery.where(eq(eloOrg.language, language)) : orgBaseQuery).orderBy(
+			desc(eloOrg.rating),
+			desc(eloOrg.numComparisons),
+			asc(organisations.name)
+		),
+		(language
+			? modelBaseQuery.where(eq(eloModel.language, language))
+			: modelBaseQuery
+		).orderBy(
+			desc(eloModel.rating),
+			desc(eloModel.numComparisons),
+			asc(organisations.name),
+			asc(eloModel.modelName)
+		),
+		(language
+			? voiceBaseQuery.where(eq(eloVoice.language, language))
+			: voiceBaseQuery
+		).orderBy(
+			desc(eloVoice.rating),
+			desc(eloVoice.numComparisons),
+			asc(organisations.name),
+			asc(eloVoice.modelName),
+			asc(voices.voiceName)
+		)
+	]);
+
+	return {
+		orgs,
+		models: modelsBoard,
+		voices: voicesBoard
+	};
 }
 
 async function updateVoiceElo(

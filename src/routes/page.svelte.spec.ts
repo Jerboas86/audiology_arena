@@ -6,7 +6,7 @@ import Page from './+page.svelte';
 
 describe('/+page.svelte', () => {
 	afterEach(() => {
-		setLocale('en', { reload: false });
+		setLocale('fr', { reload: false });
 	});
 
 	it('renders the English version and keeps voting disabled initially', async () => {

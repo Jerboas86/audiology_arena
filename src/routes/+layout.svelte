@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages';
+	import { page } from '$app/state';
 
 	let { children } = $props();
 </script>
@@ -11,8 +12,14 @@
 
 <div class="shell">
 	<header class="topbar">
-		<div class="brand">Audiology Arena</div>
-		<div class="tagline">{m.home_tagline()}</div>
+		<div>
+			<div class="brand">Audiology Arena</div>
+			<div class="tagline">{m.home_tagline()}</div>
+		</div>
+		<nav class="nav" aria-label={m.nav_label()}>
+			<a class:active={page.url.pathname === '/'} href="/">{m.nav_arena()}</a>
+			<a class:active={page.url.pathname === '/scores'} href="/scores">{m.nav_scores()}</a>
+		</nav>
 	</header>
 
 	{@render children()}
@@ -42,7 +49,7 @@
 	.topbar {
 		display: flex;
 		flex-wrap: wrap;
-		align-items: baseline;
+		align-items: center;
 		justify-content: space-between;
 		gap: 12px;
 		padding: 0 4px 24px;
@@ -59,5 +66,27 @@
 		text-transform: uppercase;
 		letter-spacing: 0.18em;
 		color: rgba(30, 27, 22, 0.72);
+	}
+
+	.nav {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.nav a {
+		padding: 10px 16px;
+		border-radius: 999px;
+		border: 1px solid rgba(30, 27, 22, 0.12);
+		background: rgba(255, 251, 245, 0.72);
+		color: inherit;
+		text-decoration: none;
+		font-weight: 600;
+	}
+
+	.nav a.active {
+		background: linear-gradient(180deg, rgba(193, 107, 39, 0.92), rgba(120, 66, 28, 0.96));
+		border-color: rgba(120, 66, 28, 0.8);
+		color: #fff9f2;
 	}
 </style>
