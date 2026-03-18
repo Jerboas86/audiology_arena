@@ -1,0 +1,177 @@
+{
+  "id": "f180d054-dbb9-4453-8682-b6368a80a7df",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "aud.tokens": {
+      "name": "tokens",
+      "schema": "aud",
+      "columns": {
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "list_id": {
+          "name": "list_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "language": {
+          "name": "language",
+          "type": "lang_code",
+          "typeSchema": "aud",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "homonyms": {
+          "name": "homonyms",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'"
+        },
+        "definite_article": {
+          "name": "definite_article",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "indefinite_article": {
+          "name": "indefinite_article",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tokens_list_id_word_lists_list_id_fk": {
+          "name": "tokens_list_id_word_lists_list_id_fk",
+          "tableFrom": "tokens",
+          "tableTo": "word_lists",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "list_id"
+          ],
+          "columnsTo": [
+            "list_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "tokens_pkey": {
+          "name": "tokens_pkey",
+          "columns": [
+            "token",
+            "list_id",
+            "language"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "aud.word_lists": {
+      "name": "word_lists",
+      "schema": "aud",
+      "columns": {
+        "list_id": {
+          "name": "list_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "list_name": {
+          "name": "list_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "list_type": {
+          "name": "list_type",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "list_number": {
+          "name": "list_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "word_lists_list_name_list_number_key": {
+          "name": "word_lists_list_name_list_number_key",
+          "nullsNotDistinct": false,
+          "columns": [
+            "list_name",
+            "list_number"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "list_name_is_lower_alpha": {
+          "name": "list_name_is_lower_alpha",
+          "value": "\"aud\".\"word_lists\".\"list_name\" ~ '[a-z]+'"
+        },
+        "list_type_is_lower_alpha": {
+          "name": "list_type_is_lower_alpha",
+          "value": "\"aud\".\"word_lists\".\"list_type\" ~ '[a-z]+'"
+        },
+        "non_negative_list_number": {
+          "name": "non_negative_list_number",
+          "value": "\"aud\".\"word_lists\".\"list_number\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "aud.lang_code": {
+      "name": "lang_code",
+      "schema": "aud",
+      "values": [
+        "fr-FR",
+        "en-US",
+        "en-GB",
+        "es-ES",
+        "de-DE",
+        "it-IT"
+      ]
+    }
+  },
+  "schemas": {
+    "aud": "aud"
+  },
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
