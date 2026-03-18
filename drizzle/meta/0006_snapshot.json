@@ -1,0 +1,1441 @@
+{
+  "id": "a87ffaa8-5c0b-4482-8a02-37e4fa2f5661",
+  "prevId": "d7416758-59c9-4a9e-89c5-23a12158af35",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "aud.comparisons": {
+      "name": "comparisons",
+      "schema": "aud",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "list_id": {
+          "name": "list_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "language": {
+          "name": "language",
+          "type": "lang_code",
+          "typeSchema": "aud",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "org_slug_a": {
+          "name": "org_slug_a",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "model_name_a": {
+          "name": "model_name_a",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voice_id_a": {
+          "name": "voice_id_a",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "org_slug_b": {
+          "name": "org_slug_b",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "model_name_b": {
+          "name": "model_name_b",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voice_id_b": {
+          "name": "voice_id_b",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_org_slug": {
+          "name": "winner_org_slug",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_model_name": {
+          "name": "winner_model_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_voice_id": {
+          "name": "winner_voice_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_comparisons_side_a": {
+          "name": "idx_comparisons_side_a",
+          "columns": [
+            {
+              "expression": "org_slug_a",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "model_name_a",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "voice_id_a",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_comparisons_side_b": {
+          "name": "idx_comparisons_side_b",
+          "columns": [
+            {
+              "expression": "org_slug_b",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "model_name_b",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "voice_id_b",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_comparisons_winner_org": {
+          "name": "idx_comparisons_winner_org",
+          "columns": [
+            {
+              "expression": "winner_org_slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_comparisons_winner_model": {
+          "name": "idx_comparisons_winner_model",
+          "columns": [
+            {
+              "expression": "winner_org_slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "winner_model_name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_comparisons_winner_voice": {
+          "name": "idx_comparisons_winner_voice",
+          "columns": [
+            {
+              "expression": "winner_org_slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "winner_model_name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "winner_voice_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_comparisons_created_at": {
+          "name": "idx_comparisons_created_at",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "comparisons_side_a_fkey": {
+          "name": "comparisons_side_a_fkey",
+          "tableFrom": "comparisons",
+          "tableTo": "model_voices",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "org_slug_a",
+            "model_name_a",
+            "voice_id_a"
+          ],
+          "columnsTo": [
+            "org_slug",
+            "model_name",
+            "voice_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "comparisons_side_b_fkey": {
+          "name": "comparisons_side_b_fkey",
+          "tableFrom": "comparisons",
+          "tableTo": "model_voices",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "org_slug_b",
+            "model_name_b",
+            "voice_id_b"
+          ],
+          "columnsTo": [
+            "org_slug",
+            "model_name",
+            "voice_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "winner_is_a_or_b": {
+          "name": "winner_is_a_or_b",
+          "value": "(\"aud\".\"comparisons\".\"winner_org_slug\", \"aud\".\"comparisons\".\"winner_model_name\", \"aud\".\"comparisons\".\"winner_voice_id\") = (\"aud\".\"comparisons\".\"org_slug_a\", \"aud\".\"comparisons\".\"model_name_a\", \"aud\".\"comparisons\".\"voice_id_a\") OR (\"aud\".\"comparisons\".\"winner_org_slug\", \"aud\".\"comparisons\".\"winner_model_name\", \"aud\".\"comparisons\".\"winner_voice_id\") = (\"aud\".\"comparisons\".\"org_slug_b\", \"aud\".\"comparisons\".\"model_name_b\", \"aud\".\"comparisons\".\"voice_id_b\")"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "aud.elo_history": {
+      "name": "elo_history",
+      "schema": "aud",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "level": {
+          "name": "level",
+          "type": "elo_level",
+          "typeSchema": "aud",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "org_slug": {
+          "name": "org_slug",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "model_name": {
+          "name": "model_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "voice_id": {
+          "name": "voice_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "language": {
+          "name": "language",
+          "type": "lang_code",
+          "typeSchema": "aud",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rating": {
+          "name": "rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "comparison_id": {
+          "name": "comparison_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_elo_history_entity": {
+          "name": "idx_elo_history_entity",
+          "columns": [
+            {
+              "expression": "level",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "org_slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "model_name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "voice_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "language",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_elo_history_comparison": {
+          "name": "idx_elo_history_comparison",
+          "columns": [
+            {
+              "expression": "comparison_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_elo_history_created_at": {
+          "name": "idx_elo_history_created_at",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "elo_history_comparison_id_comparisons_id_fk": {
+          "name": "elo_history_comparison_id_comparisons_id_fk",
+          "tableFrom": "elo_history",
+          "tableTo": "comparisons",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "comparison_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "aud.elo_model": {
+      "name": "elo_model",
+      "schema": "aud",
+      "columns": {
+        "org_slug": {
+          "name": "org_slug",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "model_name": {
+          "name": "model_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "language": {
+          "name": "language",
+          "type": "lang_code",
+          "typeSchema": "aud",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rating": {
+          "name": "rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1500
+        },
+        "num_comparisons": {
+          "name": "num_comparisons",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "num_wins": {
+          "name": "num_wins",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "num_losses": {
+          "name": "num_losses",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_elo_model_rating": {
+          "name": "idx_elo_model_rating",
+          "columns": [
+            {
+              "expression": "language",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "rating",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "elo_model_model_fkey": {
+          "name": "elo_model_model_fkey",
+          "tableFrom": "elo_model",
+          "tableTo": "models",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "org_slug",
+            "model_name"
+          ],
+          "columnsTo": [
+            "org_slug",
+            "name"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "elo_model_pkey": {
+          "name": "elo_model_pkey",
+          "columns": [
+            "org_slug",
+            "model_name",
+            "language"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "aud.elo_org": {
+      "name": "elo_org",
+      "schema": "aud",
+      "columns": {
+        "org_slug": {
+          "name": "org_slug",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "language": {
+          "name": "language",
+          "type": "lang_code",
+          "typeSchema": "aud",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rating": {
+          "name": "rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1500
+        },
+        "num_comparisons": {
+          "name": "num_comparisons",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "num_wins": {
+          "name": "num_wins",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "num_losses": {
+          "name": "num_losses",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_elo_org_rating": {
+          "name": "idx_elo_org_rating",
+          "columns": [
+            {
+              "expression": "language",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "rating",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "elo_org_org_slug_organisations_slug_fk": {
+          "name": "elo_org_org_slug_organisations_slug_fk",
+          "tableFrom": "elo_org",
+          "tableTo": "organisations",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "org_slug"
+          ],
+          "columnsTo": [
+            "slug"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "elo_org_pkey": {
+          "name": "elo_org_pkey",
+          "columns": [
+            "org_slug",
+            "language"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "aud.elo_voice": {
+      "name": "elo_voice",
+      "schema": "aud",
+      "columns": {
+        "org_slug": {
+          "name": "org_slug",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "model_name": {
+          "name": "model_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voice_id": {
+          "name": "voice_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "language": {
+          "name": "language",
+          "type": "lang_code",
+          "typeSchema": "aud",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rating": {
+          "name": "rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1500
+        },
+        "num_comparisons": {
+          "name": "num_comparisons",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "num_wins": {
+          "name": "num_wins",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "num_losses": {
+          "name": "num_losses",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_elo_voice_rating": {
+          "name": "idx_elo_voice_rating",
+          "columns": [
+            {
+              "expression": "language",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "rating",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "elo_voice_model_voice_fkey": {
+          "name": "elo_voice_model_voice_fkey",
+          "tableFrom": "elo_voice",
+          "tableTo": "model_voices",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "org_slug",
+            "model_name",
+            "voice_id"
+          ],
+          "columnsTo": [
+            "org_slug",
+            "model_name",
+            "voice_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "elo_voice_pkey": {
+          "name": "elo_voice_pkey",
+          "columns": [
+            "org_slug",
+            "model_name",
+            "voice_id",
+            "language"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "aud.model_voices": {
+      "name": "model_voices",
+      "schema": "aud",
+      "columns": {
+        "org_slug": {
+          "name": "org_slug",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "model_name": {
+          "name": "model_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voice_id": {
+          "name": "voice_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "model_voices_model_fkey": {
+          "name": "model_voices_model_fkey",
+          "tableFrom": "model_voices",
+          "tableTo": "models",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "org_slug",
+            "model_name"
+          ],
+          "columnsTo": [
+            "org_slug",
+            "name"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "model_voices_voice_fkey": {
+          "name": "model_voices_voice_fkey",
+          "tableFrom": "model_voices",
+          "tableTo": "voices",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "org_slug",
+            "voice_id"
+          ],
+          "columnsTo": [
+            "org_slug",
+            "voice_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "model_voices_pkey": {
+          "name": "model_voices_pkey",
+          "columns": [
+            "org_slug",
+            "model_name",
+            "voice_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "aud.models": {
+      "name": "models",
+      "schema": "aud",
+      "columns": {
+        "org_slug": {
+          "name": "org_slug",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "models_org_slug_organisations_slug_fk": {
+          "name": "models_org_slug_organisations_slug_fk",
+          "tableFrom": "models",
+          "tableTo": "organisations",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "org_slug"
+          ],
+          "columnsTo": [
+            "slug"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "models_pkey": {
+          "name": "models_pkey",
+          "columns": [
+            "org_slug",
+            "name"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "aud.organisations": {
+      "name": "organisations",
+      "schema": "aud",
+      "columns": {
+        "slug": {
+          "name": "slug",
+          "type": "varchar(100)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "slug_is_kebab": {
+          "name": "slug_is_kebab",
+          "value": "\"aud\".\"organisations\".\"slug\" ~ '^[a-z0-9-]+$'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "aud.tokens": {
+      "name": "tokens",
+      "schema": "aud",
+      "columns": {
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "list_id": {
+          "name": "list_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "language": {
+          "name": "language",
+          "type": "lang_code",
+          "typeSchema": "aud",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "homonyms": {
+          "name": "homonyms",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'"
+        },
+        "definite_article": {
+          "name": "definite_article",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "indefinite_article": {
+          "name": "indefinite_article",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tokens_list_id_word_lists_list_id_fk": {
+          "name": "tokens_list_id_word_lists_list_id_fk",
+          "tableFrom": "tokens",
+          "tableTo": "word_lists",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "list_id"
+          ],
+          "columnsTo": [
+            "list_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "tokens_pkey": {
+          "name": "tokens_pkey",
+          "columns": [
+            "token",
+            "list_id",
+            "language"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "aud.tts_jobs": {
+      "name": "tts_jobs",
+      "schema": "aud",
+      "columns": {
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "list_id": {
+          "name": "list_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "language": {
+          "name": "language",
+          "type": "lang_code",
+          "typeSchema": "aud",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "org_slug": {
+          "name": "org_slug",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "model_name": {
+          "name": "model_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voice_id": {
+          "name": "voice_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "s3_uri": {
+          "name": "s3_uri",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "file_size_bytes": {
+          "name": "file_size_bytes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "error_message": {
+          "name": "error_message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "retry_count": {
+          "name": "retry_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "processed_at": {
+          "name": "processed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_tts_jobs_status": {
+          "name": "idx_tts_jobs_status",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_tts_jobs_language": {
+          "name": "idx_tts_jobs_language",
+          "columns": [
+            {
+              "expression": "language",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_tts_jobs_created_at": {
+          "name": "idx_tts_jobs_created_at",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_tts_jobs_model_voice": {
+          "name": "idx_tts_jobs_model_voice",
+          "columns": [
+            {
+              "expression": "org_slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "model_name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "voice_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "tts_jobs_tokens_fkey": {
+          "name": "tts_jobs_tokens_fkey",
+          "tableFrom": "tts_jobs",
+          "tableTo": "tokens",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "token",
+            "list_id",
+            "language"
+          ],
+          "columnsTo": [
+            "token",
+            "list_id",
+            "language"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tts_jobs_model_voice_fkey": {
+          "name": "tts_jobs_model_voice_fkey",
+          "tableFrom": "tts_jobs",
+          "tableTo": "model_voices",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "org_slug",
+            "model_name",
+            "voice_id"
+          ],
+          "columnsTo": [
+            "org_slug",
+            "model_name",
+            "voice_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "tts_jobs_pkey": {
+          "name": "tts_jobs_pkey",
+          "columns": [
+            "token",
+            "list_id",
+            "language",
+            "org_slug",
+            "model_name",
+            "voice_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "aud.voices": {
+      "name": "voices",
+      "schema": "aud",
+      "columns": {
+        "org_slug": {
+          "name": "org_slug",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voice_id": {
+          "name": "voice_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voice_name": {
+          "name": "voice_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "voices_org_slug_organisations_slug_fk": {
+          "name": "voices_org_slug_organisations_slug_fk",
+          "tableFrom": "voices",
+          "tableTo": "organisations",
+          "schemaTo": "aud",
+          "columnsFrom": [
+            "org_slug"
+          ],
+          "columnsTo": [
+            "slug"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "voices_pkey": {
+          "name": "voices_pkey",
+          "columns": [
+            "org_slug",
+            "voice_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "aud.word_lists": {
+      "name": "word_lists",
+      "schema": "aud",
+      "columns": {
+        "list_id": {
+          "name": "list_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "list_name": {
+          "name": "list_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "list_type": {
+          "name": "list_type",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "list_number": {
+          "name": "list_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "language": {
+          "name": "language",
+          "type": "lang_code",
+          "typeSchema": "aud",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "word_lists_list_name_list_number_language_key": {
+          "name": "word_lists_list_name_list_number_language_key",
+          "nullsNotDistinct": false,
+          "columns": [
+            "list_name",
+            "list_number",
+            "language"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "list_name_is_lower_alpha": {
+          "name": "list_name_is_lower_alpha",
+          "value": "\"aud\".\"word_lists\".\"list_name\" ~ '[a-z]+'"
+        },
+        "list_type_is_lower_alpha": {
+          "name": "list_type_is_lower_alpha",
+          "value": "\"aud\".\"word_lists\".\"list_type\" ~ '[a-z]+'"
+        },
+        "non_negative_list_number": {
+          "name": "non_negative_list_number",
+          "value": "\"aud\".\"word_lists\".\"list_number\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "aud.elo_level": {
+      "name": "elo_level",
+      "schema": "aud",
+      "values": [
+        "voice",
+        "model",
+        "org"
+      ]
+    },
+    "aud.lang_code": {
+      "name": "lang_code",
+      "schema": "aud",
+      "values": [
+        "fr-FR",
+        "en-US",
+        "en-GB",
+        "es-ES",
+        "de-DE",
+        "it-IT"
+      ]
+    }
+  },
+  "schemas": {
+    "aud": "aud"
+  },
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

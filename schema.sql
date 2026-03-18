@@ -200,8 +200,9 @@ CREATE TABLE aud.tts_jobs (
     token           text NOT NULL,
     list_id         text NOT NULL,
     language        aud.lang_code NOT NULL,
-    provider        varchar(50) NOT NULL,
-    voice_id        varchar(100) NOT NULL,
+    org_slug        varchar(100) NOT NULL,
+    model_name      varchar(100) NOT NULL,
+    voice_id        text NOT NULL,
     status          varchar(20) NOT NULL DEFAULT 'pending',
     s3_uri          text,
     file_size_bytes integer,
@@ -211,13 +212,16 @@ CREATE TABLE aud.tts_jobs (
     created_at      timestamptz NOT NULL DEFAULT now(),
     updated_at      timestamptz NOT NULL DEFAULT now(),
 
-    CONSTRAINT tts_jobs_pkey PRIMARY KEY (token, list_id, language, provider, voice_id),
+    CONSTRAINT tts_jobs_pkey PRIMARY KEY (token, list_id, language, org_slug, model_name, voice_id),
     CONSTRAINT tts_jobs_tokens_fkey
         FOREIGN KEY (token, list_id, language)
-        REFERENCES aud.tokens(token, list_id, language) ON DELETE CASCADE
+        REFERENCES aud.tokens(token, list_id, language) ON DELETE CASCADE,
+    CONSTRAINT tts_jobs_model_voice_fkey
+        FOREIGN KEY (org_slug, model_name, voice_id)
+        REFERENCES aud.model_voices(org_slug, model_name, voice_id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_tts_jobs_status ON aud.tts_jobs (status);
 CREATE INDEX idx_tts_jobs_language ON aud.tts_jobs (language);
 CREATE INDEX idx_tts_jobs_created_at ON aud.tts_jobs (created_at);
-CREATE INDEX idx_tts_jobs_provider_voice ON aud.tts_jobs (provider, voice_id);
+CREATE INDEX idx_tts_jobs_model_voice ON aud.tts_jobs (org_slug, model_name, voice_id);

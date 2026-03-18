@@ -263,8 +263,9 @@ export const ttsJobs = audSchema.table(
 		token: text('token').notNull(),
 		listId: text('list_id').notNull(),
 		language: langCodeEnum('language').notNull(),
-		provider: varchar('provider', { length: 50 }).notNull(),
-		voiceId: varchar('voice_id', { length: 100 }).notNull(),
+		orgSlug: varchar('org_slug', { length: 100 }).notNull(),
+		modelName: varchar('model_name', { length: 100 }).notNull(),
+		voiceId: text('voice_id').notNull(),
 		status: varchar('status', { length: 20 }).notNull().default('pending'),
 		s3Uri: text('s3_uri'),
 		fileSizeBytes: integer('file_size_bytes'),
@@ -277,16 +278,21 @@ export const ttsJobs = audSchema.table(
 	(t) => [
 		primaryKey({
 			name: 'tts_jobs_pkey',
-			columns: [t.token, t.listId, t.language, t.provider, t.voiceId]
+			columns: [t.token, t.listId, t.language, t.orgSlug, t.modelName, t.voiceId]
 		}),
 		foreignKey({
 			name: 'tts_jobs_tokens_fkey',
 			columns: [t.token, t.listId, t.language],
 			foreignColumns: [tokens.token, tokens.listId, tokens.language]
 		}).onDelete('cascade'),
+		foreignKey({
+			name: 'tts_jobs_model_voice_fkey',
+			columns: [t.orgSlug, t.modelName, t.voiceId],
+			foreignColumns: [modelVoices.orgSlug, modelVoices.modelName, modelVoices.voiceId]
+		}).onDelete('cascade'),
 		index('idx_tts_jobs_status').on(t.status),
 		index('idx_tts_jobs_language').on(t.language),
 		index('idx_tts_jobs_created_at').on(t.createdAt),
-		index('idx_tts_jobs_provider_voice').on(t.provider, t.voiceId)
+		index('idx_tts_jobs_model_voice').on(t.orgSlug, t.modelName, t.voiceId)
 	]
 );
