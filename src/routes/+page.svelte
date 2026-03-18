@@ -9,6 +9,11 @@
 	let playedA = $state(false);
 	let playedB = $state(false);
 
+	function formatRoundTitle(token: string | null | undefined, fallback: string) {
+		if (!token) return fallback;
+		return token.charAt(0).toLocaleUpperCase() + token.slice(1);
+	}
+
 	function handleVote() {
 		return async ({ result }: { result: { type: string } }) => {
 			if (result.type === 'success') {
@@ -29,6 +34,7 @@
 	const sideB = $derived(matchup?.sideB ?? null);
 	const audioUnavailable = $derived(!matchup || data.matchupError);
 	const canVote = $derived(Boolean(matchup) && playedA && playedB);
+	const roundTitle = $derived(formatRoundTitle(matchup?.token, m.home_round_title()));
 </script>
 
 <main class="arena">
@@ -41,7 +47,7 @@
 
 		<div class="round-card">
 			<div class="round-label">{m.home_round_label()}</div>
-			<div class="round-title">{m.home_round_title()}</div>
+			<div class="round-title">{roundTitle}</div>
 			<div class="round-meta">
 				<span>{m.home_round_meta_players()}</span>
 				<span>{m.home_round_meta_winner()}</span>
@@ -217,6 +223,8 @@
 		font-size: clamp(2.4rem, 4vw, 3.6rem);
 		font-weight: 800;
 		letter-spacing: -0.05em;
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 
 	.round-meta {

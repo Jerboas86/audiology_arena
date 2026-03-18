@@ -11,7 +11,28 @@ describe('/+page.svelte', () => {
 
 	it('renders the English version and keeps voting disabled initially', async () => {
 		setLocale('en', { reload: false });
-		render(Page);
+		render(Page, {
+			data: {
+				matchup: {
+					token: 'le bouchon',
+					listId: 'list-1',
+					language: 'fr-FR',
+					sideA: {
+						orgSlug: 'org-a',
+						modelName: 'model-a',
+						voiceId: 'voice-a',
+						audioUrl: '/audio/a.mp3'
+					},
+					sideB: {
+						orgSlug: 'org-b',
+						modelName: 'model-b',
+						voiceId: 'voice-b',
+						audioUrl: '/audio/b.mp3'
+					}
+				},
+				matchupError: false
+			}
+		});
 
 		await expect.element(page.getByText('Le bouchon')).toBeInTheDocument();
 		await expect.element(page.getByRole('button', { name: 'Vote for A' })).toBeDisabled();

@@ -24,6 +24,7 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"devDependencies": {
+		"@aws-sdk/client-s3": "^3.1011.0",
 		"@inlang/paraglide-js": "^2.15.0",
 		"@playwright/test": "^1.58.2",
 		"@sveltejs/adapter-cloudflare": "^7.2.8",
