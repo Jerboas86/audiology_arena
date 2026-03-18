@@ -97,6 +97,23 @@ export const voices = audSchema.table(
 	(t) => [primaryKey({ name: 'voices_pkey', columns: [t.orgSlug, t.voiceId] })]
 );
 
+export const voiceLanguages = audSchema.table(
+	'voice_languages',
+	{
+		orgSlug: varchar('org_slug', { length: 100 }).notNull(),
+		voiceId: text('voice_id').notNull(),
+		language: langCodeEnum('language').notNull()
+	},
+	(t) => [
+		primaryKey({ name: 'voice_languages_pkey', columns: [t.orgSlug, t.voiceId, t.language] }),
+		foreignKey({
+			name: 'voice_languages_voice_fkey',
+			columns: [t.orgSlug, t.voiceId],
+			foreignColumns: [voices.orgSlug, voices.voiceId]
+		}).onDelete('cascade')
+	]
+);
+
 export const modelVoices = audSchema.table(
 	'model_voices',
 	{

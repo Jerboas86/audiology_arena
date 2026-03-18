@@ -74,6 +74,17 @@ CREATE TABLE aud.voices (
     CONSTRAINT voices_pkey PRIMARY KEY (org_slug, voice_id)
 );
 
+-- Voice-language junction (a voice can support multiple languages)
+CREATE TABLE aud.voice_languages (
+    org_slug    varchar(100) NOT NULL,
+    voice_id    text NOT NULL,
+    language    aud.lang_code NOT NULL,
+
+    CONSTRAINT voice_languages_pkey PRIMARY KEY (org_slug, voice_id, language),
+    CONSTRAINT voice_languages_voice_fkey
+        FOREIGN KEY (org_slug, voice_id) REFERENCES aud.voices(org_slug, voice_id) ON DELETE CASCADE
+);
+
 -- Model-voice junction
 CREATE TABLE aud.model_voices (
     org_slug    varchar(100) NOT NULL,

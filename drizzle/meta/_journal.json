@@ -50,6 +50,13 @@
       "when": 1773826848401,
       "tag": "0006_flowery_crusher_hogan",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1773827686017,
+      "tag": "0007_bizarre_swarm",
+      "breakpoints": true
     }
   ]
 }
