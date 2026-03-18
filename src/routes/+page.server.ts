@@ -2,22 +2,12 @@ import { fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { ttsJobs } from '$lib/server/db/schema';
+import { resolveS3AudioUrl } from '$lib/server/audio';
 
 import { recordComparison } from '$lib/server/elo';
 import type { ComparisonInput } from '$lib/server/elo';
 import type { Actions, PageServerLoad } from './$types';
 import { env } from '$env/dynamic/private';
-
-function audioUrl(
-	orgSlug: string,
-	modelName: string,
-	voiceId: string,
-	language: string,
-	token: string
-): string {
-	const baseUrl = env.AUDIO_BASE_URL ?? '';
-	return `${baseUrl}/${orgSlug}/${modelName}/${voiceId}/${language}/${token}.mp3`;
-}
 
 export const load: PageServerLoad = async () => {
 	try {
@@ -76,6 +66,39 @@ async function pickMatchup() {
 	const shuffled = uniqueJobs.sort(() => Math.random() - 0.5);
 	const [a, b] = shuffled;
 
+	const bucketName = env.S3_BUCKET_NAME;
+	const region = env.AWS_REGION;
+
+	if (!bucketName || !region) {
+		console.error('S3 bucket configuration is incomplete');
+		return null;
+	}
+
+	const [audioUrlA, audioUrlB] = await Promise.all([
+		resolveS3AudioUrl(
+			{
+				language: a.language,
+				orgSlug: a.orgSlug,
+				modelName: a.modelName,
+				voiceId: a.voiceId,
+				token: a.token
+			},
+			{ bucketName, region }
+		),
+		resolveS3AudioUrl(
+			{
+				language: b.language,
+				orgSlug: b.orgSlug,
+				modelName: b.modelName,
+				voiceId: b.voiceId,
+				token: b.token
+			},
+			{ bucketName, region }
+		)
+	]);
+
+	if (!audioUrlA || !audioUrlB) return null;
+
 	return {
 		token: a.token,
 		listId: a.listId,
@@ -84,13 +107,13 @@ async function pickMatchup() {
 			orgSlug: a.orgSlug,
 			modelName: a.modelName,
 			voiceId: a.voiceId,
-			audioUrl: audioUrl(a.orgSlug, a.modelName, a.voiceId, a.language, a.token)
+			audioUrl: audioUrlA
 		},
 		sideB: {
 			orgSlug: b.orgSlug,
 			modelName: b.modelName,
 			voiceId: b.voiceId,
-			audioUrl: audioUrl(b.orgSlug, b.modelName, b.voiceId, b.language, b.token)
+			audioUrl: audioUrlB
 		}
 	};
 }
