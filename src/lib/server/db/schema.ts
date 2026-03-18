@@ -32,10 +32,11 @@ export const wordLists = audSchema.table(
 		listId: text('list_id').primaryKey(),
 		listName: varchar('list_name', { length: 100 }).notNull(),
 		listType: varchar('list_type', { length: 100 }).notNull(),
-		listNumber: integer('list_number').notNull()
+		listNumber: integer('list_number').notNull(),
+		language: langCodeEnum('language').notNull()
 	},
 	(t) => [
-		unique('word_lists_list_name_list_number_key').on(t.listName, t.listNumber),
+		unique('word_lists_list_name_list_number_language_key').on(t.listName, t.listNumber, t.language),
 		check('list_name_is_lower_alpha', sql`${t.listName} ~ '[a-z]+'`),
 		check('list_type_is_lower_alpha', sql`${t.listType} ~ '[a-z]+'`),
 		check('non_negative_list_number', sql`${t.listNumber} >= 0`)
