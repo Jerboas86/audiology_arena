@@ -10,11 +10,11 @@
 	},
 	"routes": [
 		{
-			"pattern": "audarena.com/*",
+			"pattern": "audarena.com",
 			"custom_domain": true
 		},
 		{
-			"pattern": "www.audarena.com/*",
+			"pattern": "www.audarena.com",
 			"custom_domain": true
 		}
 	],
