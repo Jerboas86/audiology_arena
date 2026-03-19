@@ -8,6 +8,16 @@
 		"binding": "ASSETS",
 		"directory": ".svelte-kit/cloudflare"
 	},
+	"routes": [
+		{
+			"pattern": "audarena.com/*",
+			"custom_domain": true
+		},
+		{
+			"pattern": "www.audarena.com/*",
+			"custom_domain": true
+		}
+	],
 	"workers_dev": true,
 	"preview_urls": true
 }
