@@ -70,35 +70,28 @@ async function pickMatchup() {
 	const bucketName = env.S3_BUCKET_NAME;
 	const region = env.AWS_REGION;
 
-	if (!bucketName || !region) {
-		console.error('S3 bucket configuration is incomplete');
-		return null;
-	}
+	const resolveAudioUrl = (job: (typeof uniqueJobs)[number]) => {
+		const proxyUrl = buildAudioProxyUrl(job.s3Uri);
+		if (proxyUrl) return proxyUrl;
 
-	const [audioUrlA, audioUrlB] = await Promise.all([
-		buildAudioProxyUrl(a.s3Uri) ??
-			resolveS3AudioUrl(
-				{
-					language: a.language,
-					orgSlug: a.orgSlug,
-					modelName: a.modelName,
-					voiceId: a.voiceId,
-					token: a.token
-				},
-				{ bucketName, region }
-			),
-		buildAudioProxyUrl(b.s3Uri) ??
-			resolveS3AudioUrl(
-				{
-					language: b.language,
-					orgSlug: b.orgSlug,
-					modelName: b.modelName,
-					voiceId: b.voiceId,
-					token: b.token
-				},
-				{ bucketName, region }
-			)
-	]);
+		if (!bucketName || !region) {
+			console.error('S3 bucket configuration is incomplete');
+			return null;
+		}
+
+		return resolveS3AudioUrl(
+			{
+				language: job.language,
+				orgSlug: job.orgSlug,
+				modelName: job.modelName,
+				voiceId: job.voiceId,
+				token: job.token
+			},
+			{ bucketName, region }
+		);
+	};
+
+	const [audioUrlA, audioUrlB] = await Promise.all([resolveAudioUrl(a), resolveAudioUrl(b)]);
 
 	if (!audioUrlA || !audioUrlB) return null;
 

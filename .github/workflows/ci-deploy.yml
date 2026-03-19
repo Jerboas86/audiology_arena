@@ -13,6 +13,13 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      HUSKY: 0
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+      PRIVATE_AWS_REGION: ${{ secrets.PRIVATE_AWS_REGION }}
+      PRIVATE_AWS_ACCESS_KEY_ID: ${{ secrets.PRIVATE_AWS_ACCESS_KEY_ID }}
+      PRIVATE_AWS_SECRET_ACCESS_KEY: ${{ secrets.PRIVATE_AWS_SECRET_ACCESS_KEY }}
 
     steps:
       - name: Checkout
@@ -50,6 +57,11 @@ jobs:
     timeout-minutes: 20
     env:
       HUSKY: 0
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+      PRIVATE_AWS_REGION: ${{ secrets.PRIVATE_AWS_REGION }}
+      PRIVATE_AWS_ACCESS_KEY_ID: ${{ secrets.PRIVATE_AWS_ACCESS_KEY_ID }}
+      PRIVATE_AWS_SECRET_ACCESS_KEY: ${{ secrets.PRIVATE_AWS_SECRET_ACCESS_KEY }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
