@@ -45,7 +45,7 @@ jobs:
         run: pnpm build
 
   deploy:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -57,7 +57,7 @@ jobs:
       - name: Checkout merged commit
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.merge_commit_sha || github.sha }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
