@@ -138,6 +138,18 @@
 			{audioUnavailable ? m.home_footnote_unavailable() : m.home_footnote()}
 		</p>
 	{/if}
+
+	<section class="support-card">
+		<div class="support-glow" aria-hidden="true"></div>
+		<div class="support-copy">
+			<p class="support-eyebrow">{m.home_support_eyebrow()}</p>
+			<h2>{m.home_support_heading()}</h2>
+			<p>{m.home_support_body()}</p>
+		</div>
+		<a class="support-link" href="https://fr.tipeee.com/audarena/" target="_blank" rel="noreferrer">
+			{m.home_support_cta()}
+		</a>
+	</section>
 </main>
 
 <style>
@@ -157,7 +169,8 @@
 	.hero-copy,
 	.round-card,
 	.player,
-	.result-card {
+	.result-card,
+	.support-card {
 		border: 1px solid rgba(30, 27, 22, 0.12);
 		border-radius: 28px;
 		background: rgba(255, 251, 245, 0.72);
@@ -328,6 +341,89 @@
 		gap: 12px;
 	}
 
+	.support-card {
+		position: relative;
+		overflow: hidden;
+		padding: clamp(24px, 4vw, 36px);
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 24px;
+		background:
+			radial-gradient(circle at top right, rgba(124, 241, 220, 0.28), transparent 32%),
+			linear-gradient(135deg, rgba(12, 63, 67, 0.98), rgba(24, 109, 107, 0.94));
+		border-color: rgba(183, 255, 242, 0.24);
+		box-shadow:
+			0 26px 70px rgba(9, 51, 56, 0.26),
+			inset 0 1px 0 rgba(227, 255, 250, 0.16);
+		color: #eefcf9;
+	}
+
+	.support-glow {
+		position: absolute;
+		inset: auto -6rem -8rem auto;
+		width: 16rem;
+		height: 16rem;
+		border-radius: 999px;
+		background: radial-gradient(circle, rgba(185, 255, 239, 0.3), transparent 68%);
+		pointer-events: none;
+	}
+
+	.support-copy {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		gap: 12px;
+	}
+
+	.support-eyebrow {
+		margin: 0;
+		text-transform: uppercase;
+		letter-spacing: 0.14em;
+		font-size: 0.8rem;
+		color: rgba(212, 255, 246, 0.74);
+	}
+
+	.support-copy h2 {
+		max-width: 14ch;
+		line-height: 0.95;
+	}
+
+	.support-copy p:last-child {
+		margin: 0;
+		font-size: 1rem;
+		line-height: 1.6;
+		color: rgba(234, 255, 250, 0.86);
+		max-width: 52ch;
+	}
+
+	.support-link {
+		position: relative;
+		z-index: 1;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 16px 22px;
+		border-radius: 999px;
+		border: 1px solid rgba(220, 255, 248, 0.36);
+		background: linear-gradient(135deg, #ecfffb, #9de9d8);
+		color: #0f4747;
+		font-weight: 700;
+		text-decoration: none;
+		white-space: nowrap;
+		box-shadow: 0 18px 34px rgba(5, 39, 41, 0.28);
+		transition:
+			transform 160ms ease,
+			box-shadow 160ms ease,
+			background 160ms ease;
+	}
+
+	.support-link:hover {
+		transform: translateY(-2px);
+		background: linear-gradient(135deg, #f6fffd, #b5f2e4);
+		box-shadow: 0 22px 40px rgba(5, 39, 41, 0.32);
+	}
+
 	.footnote {
 		color: rgba(30, 27, 22, 0.6);
 		text-align: center;
@@ -337,6 +433,15 @@
 		.hero,
 		.players {
 			grid-template-columns: 1fr;
+		}
+
+		.support-card {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		.support-copy h2 {
+			max-width: none;
 		}
 
 		.player-header {
