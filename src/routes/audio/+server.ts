@@ -85,8 +85,12 @@ export const GET: RequestHandler = async ({ request, url }) => {
 			})
 		);
 	} catch (err) {
-		const statusCode = (err as { $metadata?: { httpStatusCode?: number } }).$metadata
-			?.httpStatusCode;
+		const s3Error = err as {
+			name?: string;
+			message?: string;
+			$metadata?: { httpStatusCode?: number };
+		};
+		const statusCode = s3Error.$metadata?.httpStatusCode;
 		if (statusCode === 404) {
 			throw error(404, 'Audio object not found');
 		}
@@ -95,7 +99,10 @@ export const GET: RequestHandler = async ({ request, url }) => {
 			key: object.key,
 			error: err
 		});
-		throw error(502, 'Failed to retrieve audio from storage');
+		throw error(
+			502,
+			`S3 error: ${s3Error.name}: ${s3Error.message} (HTTP ${statusCode ?? 'unknown'})`
+		);
 	}
 
 	if (!response.Body) {
