@@ -75,13 +75,28 @@ export const GET: RequestHandler = async ({ request, url }) => {
 		throw error(400, 'Invalid S3 URI');
 	}
 
-	const response = await getS3Client(region).send(
-		new GetObjectCommand({
-			Bucket: object.bucketName,
-			Key: object.key,
-			Range: request.headers.get('range') ?? undefined
-		})
-	);
+	let response;
+	try {
+		response = await getS3Client(region).send(
+			new GetObjectCommand({
+				Bucket: object.bucketName,
+				Key: object.key,
+				Range: request.headers.get('range') ?? undefined
+			})
+		);
+	} catch (err) {
+		const statusCode = (err as { $metadata?: { httpStatusCode?: number } }).$metadata
+			?.httpStatusCode;
+		if (statusCode === 404) {
+			throw error(404, 'Audio object not found');
+		}
+		console.error('S3 GetObject failed', {
+			bucket: object.bucketName,
+			key: object.key,
+			error: err
+		});
+		throw error(502, 'Failed to retrieve audio from storage');
+	}
 
 	if (!response.Body) {
 		throw error(404, 'Audio object not found');
