@@ -40,9 +40,14 @@
 <main class="arena">
 	<section class="hero">
 		<div class="hero-copy">
-			<p class="eyebrow">{m.home_eyebrow()}</p>
-			<h1>{m.home_heading()}</h1>
-			<p class="intro">{m.home_intro()}</p>
+			<div class="hero-left">
+				<p class="eyebrow">{m.home_eyebrow()}</p>
+				<h1>{m.home_heading()}</h1>
+			</div>
+			<div class="hero-right">
+				<p class="intro">{m.home_goal_1()} {m.home_goal_2()}</p>
+				<p class="intro">{m.home_intro()}</p>
+			</div>
 		</div>
 
 		<div class="round-card">
@@ -180,6 +185,10 @@
 
 	.hero-copy {
 		padding: clamp(24px, 4vw, 42px);
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 32px;
+		align-items: start;
 	}
 
 	.eyebrow,
@@ -431,7 +440,8 @@
 
 	@media (max-width: 860px) {
 		.hero,
-		.players {
+		.players,
+		.hero-copy {
 			grid-template-columns: 1fr;
 		}
 
