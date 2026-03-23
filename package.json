@@ -25,14 +25,14 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"devDependencies": {
-		"@aws-sdk/client-s3": "^3.1014.0",
+		"@aws-sdk/client-s3": "^3.1015.0",
 		"@inlang/paraglide-js": "^2.15.1",
 		"@playwright/test": "^1.58.2",
 		"@sveltejs/adapter-cloudflare": "^7.2.8",
 		"@sveltejs/kit": "^2.55.0",
 		"@sveltejs/vite-plugin-svelte": "7.0.0",
 		"@types/node": "^25.5.0",
-		"@vitest/browser-playwright": "^4.1.0",
+		"@vitest/browser-playwright": "^4.1.1",
 		"drizzle-kit": "^0.31.10",
 		"drizzle-orm": "^0.45.1",
 		"globals": "^17.4.0",
@@ -46,7 +46,7 @@
 		"typescript": "^5.9.3",
 		"vite": "^8.0.2",
 		"vite-plugin-devtools-json": "^1.0.0",
-		"vitest": "^4.1.0",
+		"vitest": "^4.1.1",
 		"vitest-browser-svelte": "^2.1.0",
 		"wrangler": "^4.76.0"
 	},
