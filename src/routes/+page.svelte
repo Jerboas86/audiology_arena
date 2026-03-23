@@ -185,7 +185,7 @@
 			<h2>{m.home_support_heading()}</h2>
 			<p>{m.home_support_body()}</p>
 		</div>
-		<a class="support-link" href="https://fr.tipeee.com/audarena/" target="_blank" rel="noreferrer">
+		<a class="support-link" href="https://fr.tipeee.com/audarena/">
 			{m.home_support_cta()}
 		</a>
 	</section>
