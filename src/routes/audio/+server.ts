@@ -1,5 +1,4 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { Readable } from 'node:stream';
 import { env } from '$env/dynamic/private';
 import { error } from '@sveltejs/kit';
 import { parseStoredS3AudioUri } from '$lib/server/audio';
@@ -34,18 +33,6 @@ function getS3Client(region: string) {
 	}
 
 	return s3Client;
-}
-
-function toWebStream(body: unknown): ReadableStream {
-	if (body && typeof body === 'object' && 'transformToWebStream' in body) {
-		return (body as { transformToWebStream(): ReadableStream }).transformToWebStream();
-	}
-
-	if (body instanceof Readable) {
-		return Readable.toWeb(body) as ReadableStream;
-	}
-
-	throw new TypeError('Unsupported S3 response body');
 }
 
 function setHeaderIfPresent(headers: Headers, name: string, value: string | number | undefined) {
@@ -109,16 +96,18 @@ export const GET: RequestHandler = async ({ request, url }) => {
 		throw error(404, 'Audio object not found');
 	}
 
+	const bytes = await response.Body.transformToByteArray();
+
 	const headers = new Headers();
 	setHeaderIfPresent(headers, 'content-type', resolveContentType(object.key, response.ContentType));
-	setHeaderIfPresent(headers, 'content-length', response.ContentLength);
+	headers.set('content-length', String(bytes.byteLength));
 	setHeaderIfPresent(headers, 'accept-ranges', response.AcceptRanges ?? 'bytes');
 	setHeaderIfPresent(headers, 'content-range', response.ContentRange);
 	setHeaderIfPresent(headers, 'etag', response.ETag);
 	setHeaderIfPresent(headers, 'last-modified', response.LastModified?.toUTCString());
 	headers.set('cache-control', 'public, max-age=300');
 
-	return new Response(toWebStream(response.Body), {
+	return new Response(bytes.buffer as ArrayBuffer, {
 		status: response.$metadata.httpStatusCode ?? 200,
 		headers
 	});
