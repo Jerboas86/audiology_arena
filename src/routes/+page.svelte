@@ -14,7 +14,11 @@
 	let retriesA = $state(0);
 	let retriesB = $state(0);
 
-	function retryAudioLoad(audio: HTMLAudioElement, retries: number, setRetries: (n: number) => void) {
+	function retryAudioLoad(
+		audio: HTMLAudioElement,
+		retries: number,
+		setRetries: (n: number) => void
+	) {
 		if (retries >= MAX_AUDIO_RETRIES) return;
 		const next = retries + 1;
 		setRetries(next);
@@ -121,7 +125,11 @@
 								if (!audioUnavailable) playedA = true;
 							}}
 							onerror={(e) => {
-								retryAudioLoad(e.currentTarget as HTMLAudioElement, retriesA, (n) => (retriesA = n));
+								retryAudioLoad(
+									e.currentTarget as HTMLAudioElement,
+									retriesA,
+									(n) => (retriesA = n)
+								);
 							}}
 						></audio>
 						<button class="vote" name="winner" value="a" disabled={!canVote}>
@@ -150,7 +158,11 @@
 								if (!audioUnavailable) playedB = true;
 							}}
 							onerror={(e) => {
-								retryAudioLoad(e.currentTarget as HTMLAudioElement, retriesB, (n) => (retriesB = n));
+								retryAudioLoad(
+									e.currentTarget as HTMLAudioElement,
+									retriesB,
+									(n) => (retriesB = n)
+								);
 							}}
 						></audio>
 						<button class="vote" name="winner" value="b" disabled={!canVote}>
