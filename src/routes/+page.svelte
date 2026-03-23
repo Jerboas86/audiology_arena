@@ -5,9 +5,23 @@
 
 	let { data = { matchup: null, matchupError: false } } = $props();
 
+	const MAX_AUDIO_RETRIES = 3;
+	const AUDIO_RETRY_DELAY_MS = 1000;
+
 	let voted = $state(false);
 	let playedA = $state(false);
 	let playedB = $state(false);
+	let retriesA = $state(0);
+	let retriesB = $state(0);
+
+	function retryAudioLoad(audio: HTMLAudioElement, retries: number, setRetries: (n: number) => void) {
+		if (retries >= MAX_AUDIO_RETRIES) return;
+		const next = retries + 1;
+		setRetries(next);
+		setTimeout(() => {
+			audio.load();
+		}, AUDIO_RETRY_DELAY_MS * next);
+	}
 
 	function formatRoundTitle(token: string | null | undefined, fallback: string) {
 		if (!token) return fallback;
@@ -26,6 +40,8 @@
 		voted = false;
 		playedA = false;
 		playedB = false;
+		retriesA = 0;
+		retriesB = 0;
 		await invalidateAll();
 	}
 
@@ -104,6 +120,9 @@
 							onended={() => {
 								if (!audioUnavailable) playedA = true;
 							}}
+							onerror={(e) => {
+								retryAudioLoad(e.currentTarget as HTMLAudioElement, retriesA, (n) => (retriesA = n));
+							}}
 						></audio>
 						<button class="vote" name="winner" value="a" disabled={!canVote}>
 							{m.home_vote_a()}
@@ -129,6 +148,9 @@
 							src={sideB?.audioUrl}
 							onended={() => {
 								if (!audioUnavailable) playedB = true;
+							}}
+							onerror={(e) => {
+								retryAudioLoad(e.currentTarget as HTMLAudioElement, retriesB, (n) => (retriesB = n));
 							}}
 						></audio>
 						<button class="vote" name="winner" value="b" disabled={!canVote}>
