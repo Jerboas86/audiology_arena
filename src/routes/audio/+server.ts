@@ -49,7 +49,7 @@ function resolveContentType(key: string, contentType: string | undefined) {
 	return (extension && AUDIO_CONTENT_TYPES[extension]) || 'application/octet-stream';
 }
 
-export const GET: RequestHandler = async ({ request, url }) => {
+export const GET: RequestHandler = async ({ url }) => {
 	const region = env.PRIVATE_AWS_REGION;
 	if (!region) {
 		throw error(500, 'AWS region is not configured');
@@ -67,8 +67,7 @@ export const GET: RequestHandler = async ({ request, url }) => {
 		response = await getS3Client(region).send(
 			new GetObjectCommand({
 				Bucket: object.bucketName,
-				Key: object.key,
-				Range: request.headers.get('range') ?? undefined
+				Key: object.key
 			})
 		);
 	} catch (err) {
@@ -101,14 +100,13 @@ export const GET: RequestHandler = async ({ request, url }) => {
 	const headers = new Headers();
 	setHeaderIfPresent(headers, 'content-type', resolveContentType(object.key, response.ContentType));
 	headers.set('content-length', String(bytes.byteLength));
-	setHeaderIfPresent(headers, 'accept-ranges', response.AcceptRanges ?? 'bytes');
-	setHeaderIfPresent(headers, 'content-range', response.ContentRange);
+	headers.set('accept-ranges', 'none');
 	setHeaderIfPresent(headers, 'etag', response.ETag);
 	setHeaderIfPresent(headers, 'last-modified', response.LastModified?.toUTCString());
 	headers.set('cache-control', 'public, max-age=300');
 
 	return new Response(bytes.buffer as ArrayBuffer, {
-		status: response.$metadata.httpStatusCode ?? 200,
+		status: 200,
 		headers
 	});
 };

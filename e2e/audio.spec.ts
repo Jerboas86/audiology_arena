@@ -70,11 +70,7 @@ test('home page exposes loadable audio sources for both players', async ({ page 
 		expect(src).toBeTruthy();
 		expect(src).toMatch(/^https?:\/\//);
 
-		const response = await page.request.get(src!, {
-			headers: {
-				range: 'bytes=0-1023'
-			}
-		});
+		const response = await page.request.get(src!);
 
 		if (!response.ok()) {
 			throw new Error(
