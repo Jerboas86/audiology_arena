@@ -49,21 +49,6 @@
 				</a>
 			{/each}
 		</div>
-
-		<div class="pill-row" aria-label={m.scores_language_label()}>
-			<a class:active={!data.language} class="pill" href={hrefFor(data.group, null)}>
-				{m.scores_language_all()}
-			</a>
-			{#each data.languages as language}
-				<a
-					class:active={language === data.language}
-					class="pill"
-					href={hrefFor(data.group, language)}
-				>
-					{language}
-				</a>
-			{/each}
-		</div>
 	</section>
 
 	<section class="table-card">
