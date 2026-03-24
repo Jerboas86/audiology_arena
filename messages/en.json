@@ -5,7 +5,7 @@
 	"nav_arena": "Arena",
 	"nav_scores": "Scores",
 	"home_meta_description": "Compare two audio samples, vote for the strongest option, and move from round to round with clarity.",
-	"home_goal_1": "This application ranks TTS models on the quality of their speech synthesis for speech material used in audiology.",
+	"home_goal_1": "This application ranks Text To Speech models on the quality of their speech synthesis for speech material used in audiology.",
 	"home_goal_2": "The goal is to identify which models and voices are best suited for clinical use.",
 	"home_tagline": "May the best one win",
 	"home_eyebrow": "Round in progress",
