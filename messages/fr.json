@@ -55,7 +55,5 @@
 	"scores_col_model": "Modele",
 	"scores_col_voice": "Voix",
 	"scores_col_language": "Langue",
-	"scores_col_rating": "Elo",
-	"scores_col_record": "Bilan",
-	"scores_col_win_rate": "Taux de victoire"
+	"scores_col_rating": "Elo"
 }

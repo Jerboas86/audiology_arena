@@ -18,11 +18,6 @@
 		return `/scores?${params.toString()}`;
 	}
 
-	function formatRatio(wins: number, comparisons: number) {
-		if (comparisons === 0) return '0%';
-		return `${Math.round((wins / comparisons) * 100)}%`;
-	}
-
 	const selectedRows = $derived(
 		data.group === 'org'
 			? data.leaderboards.orgs
@@ -66,8 +61,6 @@
 						<th>{m.scores_col_org()}</th>
 						<th>{m.scores_col_language()}</th>
 						<th>{m.scores_col_rating()}</th>
-						<th>{m.scores_col_record()}</th>
-						<th>{m.scores_col_win_rate()}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -77,8 +70,6 @@
 							<td>{row.orgName}</td>
 							<td>{row.language}</td>
 							<td>{row.rating}</td>
-							<td>{row.numWins}-{row.numLosses}</td>
-							<td>{formatRatio(row.numWins, row.numComparisons)}</td>
 						</tr>
 					{/each}
 				</tbody>
@@ -92,8 +83,6 @@
 						<th>{m.scores_col_model()}</th>
 						<th>{m.scores_col_language()}</th>
 						<th>{m.scores_col_rating()}</th>
-						<th>{m.scores_col_record()}</th>
-						<th>{m.scores_col_win_rate()}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -104,8 +93,6 @@
 							<td>{row.modelName}</td>
 							<td>{row.language}</td>
 							<td>{row.rating}</td>
-							<td>{row.numWins}-{row.numLosses}</td>
-							<td>{formatRatio(row.numWins, row.numComparisons)}</td>
 						</tr>
 					{/each}
 				</tbody>
@@ -120,8 +107,6 @@
 						<th>{m.scores_col_voice()}</th>
 						<th>{m.scores_col_language()}</th>
 						<th>{m.scores_col_rating()}</th>
-						<th>{m.scores_col_record()}</th>
-						<th>{m.scores_col_win_rate()}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -133,8 +118,6 @@
 							<td>{row.voiceName}</td>
 							<td>{row.language}</td>
 							<td>{row.rating}</td>
-							<td>{row.numWins}-{row.numLosses}</td>
-							<td>{formatRatio(row.numWins, row.numComparisons)}</td>
 						</tr>
 					{/each}
 				</tbody>
