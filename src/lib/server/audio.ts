@@ -17,6 +17,11 @@ export type StoredS3Object = {
 	key: string;
 };
 
+export type ParseStoredS3AudioUriOptions = {
+	fallbackBucketName?: string;
+	overrideBucketName?: string;
+};
+
 const DEFAULT_AUDIO_EXTENSIONS = ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac'];
 
 export function buildS3AudioKey(location: AudioLocation, extension: string): string {
@@ -53,9 +58,11 @@ function encodeS3ObjectKey(key: string): string {
 
 export function parseStoredS3AudioUri(
 	s3Uri: string | null | undefined,
-	fallbackBucketName?: string
+	options: ParseStoredS3AudioUriOptions = {}
 ): StoredS3Object | null {
 	if (!s3Uri) return null;
+
+	const { fallbackBucketName, overrideBucketName } = options;
 
 	const value = s3Uri.trim();
 	if (!value) return null;
@@ -69,13 +76,14 @@ export function parseStoredS3AudioUri(
 		const key = withoutScheme.slice(firstSlash + 1);
 		if (!bucketName || !key) return null;
 
-		return { bucketName, key };
+		return { bucketName: overrideBucketName || bucketName, key };
 	}
 
-	if (!fallbackBucketName) return null;
+	const resolvedBucketName = overrideBucketName || fallbackBucketName;
+	if (!resolvedBucketName) return null;
 
 	return {
-		bucketName: fallbackBucketName,
+		bucketName: resolvedBucketName,
 		key: value
 	};
 }

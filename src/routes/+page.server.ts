@@ -68,7 +68,7 @@ async function pickMatchup() {
 	const [a, b] = shuffled;
 
 	const bucketName = env.S3_BUCKET_NAME;
-	const region = env.AWS_REGION;
+	const region = env.PRIVATE_AWS_REGION;
 
 	const resolveAudioUrl = (job: (typeof uniqueJobs)[number]) => {
 		const proxyUrl = buildAudioProxyUrl(job.s3Uri);

@@ -74,8 +74,21 @@ describe('audio helpers', () => {
 		});
 	});
 
+	it('replaces the bucket from a stored s3 uri when an override is provided', () => {
+		const object = parseStoredS3AudioUri('s3://audio-bucket/fr-FR/acme/demo/voice-a/salut.wav', {
+			overrideBucketName: 'configured-bucket'
+		});
+
+		expect(object).toEqual({
+			bucketName: 'configured-bucket',
+			key: 'fr-FR/acme/demo/voice-a/salut.wav'
+		});
+	});
+
 	it('parses a stored object key with a fallback bucket', () => {
-		const object = parseStoredS3AudioUri('fr-FR/acme/demo/voice-a/salut.wav', 'bucket');
+		const object = parseStoredS3AudioUri('fr-FR/acme/demo/voice-a/salut.wav', {
+			fallbackBucketName: 'bucket'
+		});
 
 		expect(object).toEqual({
 			bucketName: 'bucket',

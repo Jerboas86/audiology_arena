@@ -56,7 +56,10 @@ export const GET: RequestHandler = async ({ url }) => {
 	}
 
 	const s3Uri = url.searchParams.get('uri');
-	const object = parseStoredS3AudioUri(s3Uri, env.S3_BUCKET_NAME);
+	const object = parseStoredS3AudioUri(s3Uri, {
+		fallbackBucketName: env.S3_BUCKET_NAME,
+		overrideBucketName: env.S3_BUCKET_NAME
+	});
 
 	if (!object) {
 		throw error(400, 'Invalid S3 URI');
