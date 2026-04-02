@@ -28,10 +28,10 @@ async function pickMatchup() {
 			orgSlug: ttsJobs.orgSlug,
 			modelName: ttsJobs.modelName,
 			voiceId: ttsJobs.voiceId,
-			s3Uri: ttsJobs.s3Uri
+			audioUri: ttsJobs.audioUri
 		})
 		.from(ttsJobs)
-		.where(and(eq(ttsJobs.status, 'completed'), isNotNull(ttsJobs.s3Uri)));
+		.where(and(eq(ttsJobs.status, 'completed'), isNotNull(ttsJobs.audioUri)));
 
 	if (rows.length < 2) return null;
 
@@ -71,7 +71,7 @@ async function pickMatchup() {
 	const region = env.PRIVATE_AWS_REGION;
 
 	const resolveAudioUrl = (job: (typeof uniqueJobs)[number]) => {
-		const proxyUrl = buildAudioProxyUrl(job.s3Uri);
+		const proxyUrl = buildAudioProxyUrl(job.audioUri);
 		if (proxyUrl) return proxyUrl;
 
 		if (!bucketName || !region) {

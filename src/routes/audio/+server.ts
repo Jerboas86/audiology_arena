@@ -51,15 +51,13 @@ function resolveContentType(key: string, contentType: string | undefined) {
 
 export const GET: RequestHandler = async ({ url }) => {
 	const region = env.PRIVATE_AWS_REGION;
+	const bucketName = env.S3_BUCKET_NAME;
 	if (!region) {
 		throw error(500, 'AWS region is not configured');
 	}
 
-	const s3Uri = url.searchParams.get('uri');
-	const object = parseStoredS3AudioUri(s3Uri, {
-		fallbackBucketName: env.S3_BUCKET_NAME,
-		overrideBucketName: env.S3_BUCKET_NAME
-	});
+	const audioUri = url.searchParams.get('uri');
+	const object = parseStoredS3AudioUri(audioUri, { bucketName });
 
 	if (!object) {
 		throw error(400, 'Invalid S3 URI');

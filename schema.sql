@@ -215,7 +215,7 @@ CREATE TABLE aud.tts_jobs (
     model_name      varchar(100) NOT NULL,
     voice_id        text NOT NULL,
     status          varchar(20) NOT NULL DEFAULT 'pending',
-    s3_uri          text,
+    audio_uri       text,
     file_size_bytes integer,
     error_message   text,
     retry_count     integer NOT NULL DEFAULT 0,

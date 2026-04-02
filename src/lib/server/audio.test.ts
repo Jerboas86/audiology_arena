@@ -66,28 +66,16 @@ describe('audio helpers', () => {
 	});
 
 	it('parses a stored s3 uri into bucket and key', () => {
-		const object = parseStoredS3AudioUri('s3://audio-bucket/fr-FR/acme/demo/voice a/salut.wav');
-
-		expect(object).toEqual({
-			bucketName: 'audio-bucket',
-			key: 'fr-FR/acme/demo/voice a/salut.wav'
+		const object = parseStoredS3AudioUri('s3://audio-bucket/fr-FR/acme/demo/voice a/salut.wav', {
+			bucketName: 'audio-bucket'
 		});
+
+		expect(object).toBeNull();
 	});
 
-	it('replaces the bucket from a stored s3 uri when an override is provided', () => {
-		const object = parseStoredS3AudioUri('s3://audio-bucket/fr-FR/acme/demo/voice-a/salut.wav', {
-			overrideBucketName: 'configured-bucket'
-		});
-
-		expect(object).toEqual({
-			bucketName: 'configured-bucket',
-			key: 'fr-FR/acme/demo/voice-a/salut.wav'
-		});
-	});
-
-	it('parses a stored object key with a fallback bucket', () => {
+	it('parses a stored object key with the configured bucket', () => {
 		const object = parseStoredS3AudioUri('fr-FR/acme/demo/voice-a/salut.wav', {
-			fallbackBucketName: 'bucket'
+			bucketName: 'bucket'
 		});
 
 		expect(object).toEqual({
@@ -96,12 +84,32 @@ describe('audio helpers', () => {
 		});
 	});
 
-	it('builds an internal proxy URL for a stored s3 uri', () => {
-		const url = buildAudioProxyUrl('s3://audio-bucket/fr-FR/acme/demo/voice-a/salut.wav');
-
-		expect(url).toBe(
-			'/audio?uri=s3%3A%2F%2Faudio-bucket%2Ffr-FR%2Facme%2Fdemo%2Fvoice-a%2Fsalut.wav'
+	it('parses a bucket-relative object key with the configured bucket', () => {
+		const object = parseStoredS3AudioUri(
+			'fr-FR/samples/audio/62/aud_62308d6d77c714c068b2991e621820e3f8a334d9ec92abfc3ff2c065e4679c98.wav',
+			{
+				bucketName: 'transalp-tokens-bucket'
+			}
 		);
+
+		expect(object).toEqual({
+			bucketName: 'transalp-tokens-bucket',
+			key: 'fr-FR/samples/audio/62/aud_62308d6d77c714c068b2991e621820e3f8a334d9ec92abfc3ff2c065e4679c98.wav'
+		});
+	});
+
+	it('returns null for bucket-relative keys when the bucket is not configured', () => {
+		const object = parseStoredS3AudioUri(
+			'fr-FR/samples/audio/62/aud_62308d6d77c714c068b2991e621820e3f8a334d9ec92abfc3ff2c065e4679c98.wav'
+		);
+
+		expect(object).toBeNull();
+	});
+
+	it('builds an internal proxy URL for a stored s3 uri', () => {
+		const url = buildAudioProxyUrl('fr-FR/acme/demo/voice-a/salut.wav');
+
+		expect(url).toBe('/audio?uri=fr-FR%2Facme%2Fdemo%2Fvoice-a%2Fsalut.wav');
 	});
 
 	it('encodes S3 keys for browser-facing URLs', () => {

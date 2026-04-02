@@ -18,8 +18,7 @@ export type StoredS3Object = {
 };
 
 export type ParseStoredS3AudioUriOptions = {
-	fallbackBucketName?: string;
-	overrideBucketName?: string;
+	bucketName?: string;
 };
 
 const DEFAULT_AUDIO_EXTENSIONS = ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac'];
@@ -57,40 +56,28 @@ function encodeS3ObjectKey(key: string): string {
 }
 
 export function parseStoredS3AudioUri(
-	s3Uri: string | null | undefined,
+	audioUri: string | null | undefined,
 	options: ParseStoredS3AudioUriOptions = {}
 ): StoredS3Object | null {
-	if (!s3Uri) return null;
+	if (!audioUri) return null;
 
-	const { fallbackBucketName, overrideBucketName } = options;
+	const { bucketName } = options;
 
-	const value = s3Uri.trim();
+	const value = audioUri.trim();
 	if (!value) return null;
 
-	if (value.startsWith('s3://')) {
-		const withoutScheme = value.slice('s3://'.length);
-		const firstSlash = withoutScheme.indexOf('/');
-		if (firstSlash === -1) return null;
-
-		const bucketName = withoutScheme.slice(0, firstSlash);
-		const key = withoutScheme.slice(firstSlash + 1);
-		if (!bucketName || !key) return null;
-
-		return { bucketName: overrideBucketName || bucketName, key };
-	}
-
-	const resolvedBucketName = overrideBucketName || fallbackBucketName;
-	if (!resolvedBucketName) return null;
+	if (value.startsWith('s3://')) return null;
+	if (!bucketName) return null;
 
 	return {
-		bucketName: resolvedBucketName,
+		bucketName,
 		key: value
 	};
 }
 
-export function buildAudioProxyUrl(s3Uri: string | null | undefined): string | null {
-	if (!s3Uri?.trim()) return null;
-	return `/audio?uri=${encodeURIComponent(s3Uri)}`;
+export function buildAudioProxyUrl(audioUri: string | null | undefined): string | null {
+	if (!audioUri?.trim()) return null;
+	return `/audio?uri=${encodeURIComponent(audioUri)}`;
 }
 
 export function encodeS3ObjectKeyForUrl(key: string): string {
