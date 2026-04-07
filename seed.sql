@@ -1,10 +1,10 @@
 -- Seed data for aud schema
--- Generated from word_lists.csv and tokens.csv
+-- Generated from token_lists.csv and tokens.csv
 
 BEGIN;
 
--- Word lists (167 rows)
-INSERT INTO aud.word_lists (list_id, list_name, list_type, list_number, language) VALUES
+-- Token lists (167 rows)
+INSERT INTO aud.token_lists (list_id, list_name, list_type, list_number, language) VALUES
   ('boorsma_1', 'boorsma', 'word', 1, 'fr-FR'),
   ('boorsma_10', 'boorsma', 'word', 10, 'fr-FR'),
   ('boorsma_11', 'boorsma', 'word', 11, 'fr-FR'),

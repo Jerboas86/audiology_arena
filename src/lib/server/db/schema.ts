@@ -25,8 +25,8 @@ export const langCodeEnum = audSchema.enum('lang_code', [
 	'it-IT'
 ]);
 
-export const wordLists = audSchema.table(
-	'word_lists',
+export const tokenLists = audSchema.table(
+	'token_lists',
 	{
 		listId: text('list_id').primaryKey(),
 		listName: varchar('list_name', { length: 100 }).notNull(),
@@ -35,7 +35,7 @@ export const wordLists = audSchema.table(
 		language: langCodeEnum('language').notNull()
 	},
 	(t) => [
-		unique('word_lists_list_name_list_number_language_key').on(
+		unique('token_lists_list_name_list_number_language_key').on(
 			t.listName,
 			t.listNumber,
 			t.language
@@ -52,7 +52,7 @@ export const tokens = audSchema.table(
 		token: text('token').notNull(),
 		listId: text('list_id')
 			.notNull()
-			.references(() => wordLists.listId, { onDelete: 'cascade' }),
+			.references(() => tokenLists.listId, { onDelete: 'cascade' }),
 		language: langCodeEnum('language').notNull(),
 		homonyms: text('homonyms')
 			.array()
@@ -280,8 +280,8 @@ export const eloHistory = audSchema.table(
 	]
 );
 
-export const ttsJobs = audSchema.table(
-	'tts_jobs',
+export const audioSamples = audSchema.table(
+	'audio_samples',
 	{
 		token: text('token').notNull(),
 		listId: text('list_id').notNull(),
@@ -296,26 +296,27 @@ export const ttsJobs = audSchema.table(
 		retryCount: integer('retry_count').notNull().default(0),
 		processedAt: timestamp('processed_at', { withTimezone: true }),
 		createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-		updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow()
+		updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+		deprecatedAt: timestamp('deprecated_at', { withTimezone: true })
 	},
 	(t) => [
 		primaryKey({
-			name: 'tts_jobs_pkey',
+			name: 'audio_samples_pkey',
 			columns: [t.token, t.listId, t.language, t.orgSlug, t.modelName, t.voiceId]
 		}),
 		foreignKey({
-			name: 'tts_jobs_tokens_fkey',
+			name: 'audio_samples_tokens_fkey',
 			columns: [t.token, t.listId, t.language],
 			foreignColumns: [tokens.token, tokens.listId, tokens.language]
 		}).onDelete('cascade'),
 		foreignKey({
-			name: 'tts_jobs_model_voice_fkey',
+			name: 'audio_samples_model_voice_fkey',
 			columns: [t.orgSlug, t.modelName, t.voiceId],
 			foreignColumns: [modelVoices.orgSlug, modelVoices.modelName, modelVoices.voiceId]
 		}).onDelete('cascade'),
-		index('idx_tts_jobs_status').on(t.status),
-		index('idx_tts_jobs_language').on(t.language),
-		index('idx_tts_jobs_created_at').on(t.createdAt),
-		index('idx_tts_jobs_model_voice').on(t.orgSlug, t.modelName, t.voiceId)
+		index('idx_audio_samples_status').on(t.status),
+		index('idx_audio_samples_language').on(t.language),
+		index('idx_audio_samples_created_at').on(t.createdAt),
+		index('idx_audio_samples_model_voice').on(t.orgSlug, t.modelName, t.voiceId)
 	]
 );

@@ -12,15 +12,15 @@ CREATE TYPE aud.elo_level AS ENUM (
     'voice', 'model', 'org'
 );
 
--- Word lists
-CREATE TABLE aud.word_lists (
+-- Token lists
+CREATE TABLE aud.token_lists (
     list_id         text PRIMARY KEY,
     list_name       varchar(100) NOT NULL,
     list_type       varchar(100) NOT NULL,
     list_number     integer NOT NULL,
     language        aud.lang_code NOT NULL,
 
-    CONSTRAINT word_lists_list_name_list_number_language_key
+    CONSTRAINT token_lists_list_name_list_number_language_key
         UNIQUE (list_name, list_number, language),
     CONSTRAINT list_name_is_lower_alpha
         CHECK (list_name ~ '[a-z]+'),
@@ -33,7 +33,7 @@ CREATE TABLE aud.word_lists (
 -- Tokens
 CREATE TABLE aud.tokens (
     token               text NOT NULL,
-    list_id             text NOT NULL REFERENCES aud.word_lists(list_id) ON DELETE CASCADE,
+    list_id             text NOT NULL REFERENCES aud.token_lists(list_id) ON DELETE CASCADE,
     language            aud.lang_code NOT NULL,
     homonyms            text[] NOT NULL DEFAULT '{}',
     definite_article    text NOT NULL DEFAULT '',
@@ -206,8 +206,8 @@ CREATE INDEX idx_elo_history_entity ON aud.elo_history (level, org_slug, model_n
 CREATE INDEX idx_elo_history_comparison ON aud.elo_history (comparison_id);
 CREATE INDEX idx_elo_history_created_at ON aud.elo_history (created_at);
 
--- TTS jobs
-CREATE TABLE aud.tts_jobs (
+-- Audio samples
+CREATE TABLE aud.audio_samples (
     token           text NOT NULL,
     list_id         text NOT NULL,
     language        aud.lang_code NOT NULL,
@@ -222,17 +222,18 @@ CREATE TABLE aud.tts_jobs (
     processed_at    timestamptz,
     created_at      timestamptz NOT NULL DEFAULT now(),
     updated_at      timestamptz NOT NULL DEFAULT now(),
+    deprecated_at   timestamptz,
 
-    CONSTRAINT tts_jobs_pkey PRIMARY KEY (token, list_id, language, org_slug, model_name, voice_id),
-    CONSTRAINT tts_jobs_tokens_fkey
+    CONSTRAINT audio_samples_pkey PRIMARY KEY (token, list_id, language, org_slug, model_name, voice_id),
+    CONSTRAINT audio_samples_tokens_fkey
         FOREIGN KEY (token, list_id, language)
         REFERENCES aud.tokens(token, list_id, language) ON DELETE CASCADE,
-    CONSTRAINT tts_jobs_model_voice_fkey
+    CONSTRAINT audio_samples_model_voice_fkey
         FOREIGN KEY (org_slug, model_name, voice_id)
         REFERENCES aud.model_voices(org_slug, model_name, voice_id) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_tts_jobs_status ON aud.tts_jobs (status);
-CREATE INDEX idx_tts_jobs_language ON aud.tts_jobs (language);
-CREATE INDEX idx_tts_jobs_created_at ON aud.tts_jobs (created_at);
-CREATE INDEX idx_tts_jobs_model_voice ON aud.tts_jobs (org_slug, model_name, voice_id);
+CREATE INDEX idx_audio_samples_status ON aud.audio_samples (status);
+CREATE INDEX idx_audio_samples_language ON aud.audio_samples (language);
+CREATE INDEX idx_audio_samples_created_at ON aud.audio_samples (created_at);
+CREATE INDEX idx_audio_samples_model_voice ON aud.audio_samples (org_slug, model_name, voice_id);

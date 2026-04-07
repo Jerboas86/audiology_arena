@@ -1,7 +1,7 @@
 import { fail } from '@sveltejs/kit';
 import { and, eq, isNotNull } from 'drizzle-orm';
 import { db } from '$lib/server/db';
-import { ttsJobs } from '$lib/server/db/schema';
+import { audioSamples } from '$lib/server/db/schema';
 import { buildAudioProxyUrl, resolveS3AudioUrl } from '$lib/server/audio';
 
 import { recordComparison } from '$lib/server/elo';
@@ -22,16 +22,16 @@ export const load: PageServerLoad = async () => {
 async function pickMatchup() {
 	const rows = await db
 		.select({
-			token: ttsJobs.token,
-			listId: ttsJobs.listId,
-			language: ttsJobs.language,
-			orgSlug: ttsJobs.orgSlug,
-			modelName: ttsJobs.modelName,
-			voiceId: ttsJobs.voiceId,
-			audioUri: ttsJobs.audioUri
+			token: audioSamples.token,
+			listId: audioSamples.listId,
+			language: audioSamples.language,
+			orgSlug: audioSamples.orgSlug,
+			modelName: audioSamples.modelName,
+			voiceId: audioSamples.voiceId,
+			audioUri: audioSamples.audioUri
 		})
-		.from(ttsJobs)
-		.where(and(eq(ttsJobs.status, 'completed'), isNotNull(ttsJobs.audioUri)));
+		.from(audioSamples)
+		.where(and(eq(audioSamples.status, 'completed'), isNotNull(audioSamples.audioUri)));
 
 	if (rows.length < 2) return null;
 
