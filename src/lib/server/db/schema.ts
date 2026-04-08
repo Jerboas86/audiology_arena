@@ -290,6 +290,7 @@ export const audioSamples = audSchema.table(
 		modelName: varchar('model_name', { length: 100 }).notNull(),
 		voiceId: text('voice_id').notNull(),
 		status: varchar('status', { length: 20 }).notNull().default('pending'),
+		defect: text('defect').notNull().default(''),
 		audioUri: text('audio_uri'),
 		fileSizeBytes: integer('file_size_bytes'),
 		errorMessage: text('error_message'),

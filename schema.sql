@@ -215,6 +215,7 @@ CREATE TABLE aud.audio_samples (
     model_name      varchar(100) NOT NULL,
     voice_id        text NOT NULL,
     status          varchar(20) NOT NULL DEFAULT 'pending',
+    defect          text NOT NULL DEFAULT '',
     audio_uri       text,
     file_size_bytes integer,
     error_message   text,
