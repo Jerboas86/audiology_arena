@@ -168,7 +168,7 @@ export const actions: Actions = {
 				and(
 					eq(audioSamples.token, token),
 					eq(audioSamples.listId, listId),
-					eq(audioSamples.language, language as typeof audioSamples.language.enumValues[number]),
+					eq(audioSamples.language, language as (typeof audioSamples.language.enumValues)[number]),
 					eq(audioSamples.orgSlug, orgSlug),
 					eq(audioSamples.modelName, modelName),
 					eq(audioSamples.voiceId, voiceId)

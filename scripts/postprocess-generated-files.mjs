@@ -4,7 +4,7 @@ import path from 'node:path';
 const root = process.cwd();
 
 const workerTypesPath = path.join(root, 'worker-configuration.d.ts');
-const paraglideDir = path.join(root, 'src/lib/paraglide');
+const paraglideDirs = [path.join(root, 'src/lib/paraglide'), path.join(root, 'src/paraglide')];
 
 const workerImportPattern =
 	/mainModule:\s*typeof import\((['"])\.\/\.svelte-kit\/cloudflare\/_worker\1\);/;
@@ -52,7 +52,10 @@ async function walk(dir, matcher, files = []) {
 }
 
 async function addTsNoCheckToGeneratedJs() {
-	const files = await walk(paraglideDir, (file) => file.endsWith('.js'));
+	const nested = await Promise.all(
+		paraglideDirs.map((dir) => walk(dir, (file) => file.endsWith('.js')))
+	);
+	const files = nested.flat();
 
 	await Promise.all(
 		files.map(async (file) => {
