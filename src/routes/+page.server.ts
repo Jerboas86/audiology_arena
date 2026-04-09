@@ -1,5 +1,5 @@
 import { fail } from '@sveltejs/kit';
-import { and, eq, isNotNull } from 'drizzle-orm';
+import { and, eq, isNotNull, sql } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { audioSamples } from '$lib/server/db/schema';
 import { buildAudioProxyUrl, resolveS3AudioUrl } from '$lib/server/audio';
@@ -146,5 +146,35 @@ export const actions: Actions = {
 
 		const result = await recordComparison(db, input);
 		return { success: true, comparisonId: result.comparisonId };
+	},
+
+	reportDefect: async ({ request }) => {
+		const data = await request.formData();
+		const token = data.get('token') as string;
+		const listId = data.get('listId') as string;
+		const language = data.get('language') as string;
+		const orgSlug = data.get('orgSlug') as string;
+		const modelName = data.get('modelName') as string;
+		const voiceId = data.get('voiceId') as string;
+
+		if (!token || !listId || !language || !orgSlug || !modelName || !voiceId) {
+			return fail(400, { error: 'Missing sample data' });
+		}
+
+		await db
+			.update(audioSamples)
+			.set({ defect: 'reported', updatedAt: sql`now()` })
+			.where(
+				and(
+					eq(audioSamples.token, token),
+					eq(audioSamples.listId, listId),
+					eq(audioSamples.language, language as typeof audioSamples.language.enumValues[number]),
+					eq(audioSamples.orgSlug, orgSlug),
+					eq(audioSamples.modelName, modelName),
+					eq(audioSamples.voiceId, voiceId)
+				)
+			);
+
+		return { success: true };
 	}
 };

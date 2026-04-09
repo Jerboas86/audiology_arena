@@ -2,6 +2,7 @@
 	import * as m from '$lib/paraglide/messages';
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
+	import flagIcon from '$lib/assets/flag.svg';
 
 	let { data = { matchup: null, matchupError: false } } = $props();
 
@@ -13,6 +14,8 @@
 	let playedB = $state(false);
 	let retriesA = $state(0);
 	let retriesB = $state(0);
+	let flagSide: 'a' | 'b' | null = $state(null);
+	let flagDialogEl: HTMLDialogElement | undefined = $state();
 
 	function retryAudioLoad(
 		audio: HTMLAudioElement,
@@ -36,6 +39,24 @@
 		return async ({ result }: { result: { type: string } }) => {
 			if (result.type === 'success') {
 				voted = true;
+			}
+		};
+	}
+
+	function openFlagDialog(side: 'a' | 'b') {
+		flagSide = side;
+		flagDialogEl?.showModal();
+	}
+
+	function closeFlagDialog() {
+		flagDialogEl?.close();
+		flagSide = null;
+	}
+
+	function handleReportDefect() {
+		return async ({ result }: { result: { type: string } }) => {
+			if (result.type === 'success') {
+				closeFlagDialog();
 			}
 		};
 	}
@@ -117,6 +138,15 @@
 										? m.home_status_complete()
 										: m.home_status_listen()}
 							</p>
+							<button
+								class="flag-btn"
+								type="button"
+								title={m.home_flag_label()}
+								aria-label={m.home_flag_label()}
+								onclick={() => openFlagDialog('a')}
+							>
+								<img src={flagIcon} alt="" width="18" height="18" />
+							</button>
 						</div>
 						<audio
 							controls
@@ -150,6 +180,15 @@
 										? m.home_status_complete()
 										: m.home_status_listen()}
 							</p>
+							<button
+								class="flag-btn"
+								type="button"
+								title={m.home_flag_label()}
+								aria-label={m.home_flag_label()}
+								onclick={() => openFlagDialog('b')}
+							>
+								<img src={flagIcon} alt="" width="18" height="18" />
+							</button>
 						</div>
 						<audio
 							controls
@@ -176,6 +215,30 @@
 		<p class="footnote">
 			{audioUnavailable ? m.home_footnote_unavailable() : m.home_footnote()}
 		</p>
+
+		<dialog bind:this={flagDialogEl} class="flag-dialog">
+			<h3>{m.home_flag_dialog_title()}</h3>
+			<p>{m.home_flag_dialog_body()}</p>
+			<div class="flag-dialog-actions">
+				<button type="button" class="flag-dialog-cancel" onclick={closeFlagDialog}>
+					{m.home_flag_dialog_cancel()}
+				</button>
+				{#if flagSide}
+					{@const side = flagSide === 'a' ? sideA : sideB}
+					<form method="POST" action="?/reportDefect" use:enhance={handleReportDefect}>
+						<input type="hidden" name="token" value={matchup?.token ?? ''} />
+						<input type="hidden" name="listId" value={matchup?.listId ?? ''} />
+						<input type="hidden" name="language" value={matchup?.language ?? ''} />
+						<input type="hidden" name="orgSlug" value={side?.orgSlug ?? ''} />
+						<input type="hidden" name="modelName" value={side?.modelName ?? ''} />
+						<input type="hidden" name="voiceId" value={side?.voiceId ?? ''} />
+						<button type="submit" class="flag-dialog-confirm">
+							{m.home_flag_dialog_confirm()}
+						</button>
+					</form>
+				{/if}
+			</div>
+		</dialog>
 	{/if}
 
 	<section class="support-card">
@@ -325,6 +388,26 @@
 		gap: 12px;
 	}
 
+	.flag-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 6px;
+		border: 1px solid rgba(30, 27, 22, 0.12);
+		border-radius: 8px;
+		background: transparent;
+		cursor: pointer;
+		opacity: 0.5;
+		transition:
+			opacity 160ms ease,
+			background 160ms ease;
+	}
+
+	.flag-btn:hover {
+		opacity: 1;
+		background: rgba(30, 27, 22, 0.06);
+	}
+
 	.player-label {
 		font-size: 1.1rem;
 		font-weight: 700;
@@ -467,6 +550,76 @@
 		box-shadow: 0 22px 40px rgba(5, 39, 41, 0.32);
 	}
 
+	.flag-dialog {
+		border: 1px solid rgba(30, 27, 22, 0.12);
+		border-radius: 20px;
+		padding: clamp(24px, 3vw, 32px);
+		max-width: 420px;
+		width: 90vw;
+		background: #fffbf5;
+		box-shadow: 0 24px 60px rgba(84, 54, 19, 0.18);
+	}
+
+	.flag-dialog::backdrop {
+		background: rgba(30, 27, 22, 0.4);
+		backdrop-filter: blur(4px);
+	}
+
+	.flag-dialog h3 {
+		margin: 0 0 8px;
+		font-size: 1.25rem;
+		letter-spacing: -0.02em;
+	}
+
+	.flag-dialog p {
+		margin: 0 0 20px;
+		font-size: 0.95rem;
+		line-height: 1.5;
+		color: rgba(30, 27, 22, 0.72);
+	}
+
+	.flag-dialog-actions {
+		display: flex;
+		justify-content: flex-end;
+		gap: 10px;
+	}
+
+	.flag-dialog-actions form {
+		display: contents;
+	}
+
+	.flag-dialog-cancel,
+	.flag-dialog-confirm {
+		border: 0;
+		border-radius: 12px;
+		padding: 10px 18px;
+		font-size: 0.9rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition:
+			transform 160ms ease,
+			opacity 160ms ease;
+	}
+
+	.flag-dialog-cancel {
+		background: rgba(30, 27, 22, 0.08);
+		color: rgba(30, 27, 22, 0.72);
+	}
+
+	.flag-dialog-cancel:hover {
+		background: rgba(30, 27, 22, 0.14);
+	}
+
+	.flag-dialog-confirm {
+		background: linear-gradient(135deg, #8f4b22, #c16b27);
+		color: #fff8ef;
+		box-shadow: 0 8px 20px rgba(143, 75, 34, 0.2);
+	}
+
+	.flag-dialog-confirm:hover {
+		transform: translateY(-1px);
+	}
+
 	.footnote {
 		color: rgba(30, 27, 22, 0.6);
 		text-align: center;
@@ -492,5 +645,6 @@
 			flex-direction: column;
 			align-items: flex-start;
 		}
+
 	}
 </style>

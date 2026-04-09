@@ -55,5 +55,10 @@
 	"scores_col_model": "Model",
 	"scores_col_voice": "Voice",
 	"scores_col_language": "Language",
-	"scores_col_rating": "Elo"
+	"scores_col_rating": "Elo",
+	"home_flag_label": "Report defect",
+	"home_flag_dialog_title": "Report a defect",
+	"home_flag_dialog_body": "Are you sure you want to flag this sample as defective (distortion, inaudible output, ...)?",
+	"home_flag_dialog_confirm": "Confirm",
+	"home_flag_dialog_cancel": "Cancel"
 }

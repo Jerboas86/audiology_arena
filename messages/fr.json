@@ -55,5 +55,10 @@
 	"scores_col_model": "Modele",
 	"scores_col_voice": "Voix",
 	"scores_col_language": "Langue",
-	"scores_col_rating": "Elo"
+	"scores_col_rating": "Elo",
+	"home_flag_label": "Signaler un défaut",
+	"home_flag_dialog_title": "Signaler un défaut",
+	"home_flag_dialog_body": "Êtes-vous sûr de vouloir signaler cet extrait comme défectueux (distorsion, son inaudible, ...) ?",
+	"home_flag_dialog_confirm": "Confirmer",
+	"home_flag_dialog_cancel": "Annuler"
 }
