@@ -25,7 +25,7 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"devDependencies": {
-		"@aws-sdk/client-s3": "^3.1029.0",
+		"@aws-sdk/client-s3": "^3.1030.0",
 		"@inlang/paraglide-js": "^2.15.3",
 		"@playwright/test": "^1.59.1",
 		"@sveltejs/adapter-cloudflare": "^7.2.8",
@@ -37,7 +37,7 @@
 		"drizzle-orm": "^0.45.2",
 		"globals": "^17.5.0",
 		"husky": "^9.1.7",
-		"oxlint": "^1.59.0",
+		"oxlint": "^1.60.0",
 		"playwright": "^1.59.1",
 		"prettier": "^3.8.2",
 		"prettier-plugin-svelte": "^3.5.1",
@@ -47,8 +47,8 @@
 		"vite": "^8.0.8",
 		"vite-plugin-devtools-json": "^1.0.0",
 		"vitest": "^4.1.4",
-		"vitest-browser-svelte": "^2.1.0",
-		"wrangler": "^4.81.1"
+		"vitest-browser-svelte": "^2.1.1",
+		"wrangler": "^4.82.2"
 	},
 	"dependencies": {
 		"@neondatabase/serverless": "^1.0.2"
