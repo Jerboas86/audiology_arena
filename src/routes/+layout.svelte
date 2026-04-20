@@ -51,7 +51,9 @@
 		</div>
 		<nav class="nav" aria-label={m.nav_label()}>
 			<a class:active={page.url.pathname === '/'} href={hrefFor('/')}>{m.nav_arena()}</a>
-			<a class:active={page.url.pathname === '/scores'} href={hrefFor('/scores')}>{m.nav_scores()}</a>
+			<a class:active={page.url.pathname === '/scores'} href={hrefFor('/scores')}
+				>{m.nav_scores()}</a
+			>
 			{#if data.availableLanguages.length > 0}
 				<label class="language-control">
 					<span class="sr-only">{m.nav_language_label()}</span>
@@ -153,10 +155,10 @@
 		min-width: 4.5rem;
 		padding-right: 34px;
 		background:
-			linear-gradient(45deg, transparent 50%, rgba(30, 27, 22, 0.72) 50%) right 18px top
-				50% / 6px 6px no-repeat,
-			linear-gradient(135deg, rgba(30, 27, 22, 0.72) 50%, transparent 50%) right 12px top
-				50% / 6px 6px no-repeat,
+			linear-gradient(45deg, transparent 50%, rgba(30, 27, 22, 0.72) 50%) right 18px top 50% / 6px
+				6px no-repeat,
+			linear-gradient(135deg, rgba(30, 27, 22, 0.72) 50%, transparent 50%) right 12px top 50% / 6px
+				6px no-repeat,
 			rgba(255, 251, 245, 0.72);
 		cursor: pointer;
 		font: inherit;

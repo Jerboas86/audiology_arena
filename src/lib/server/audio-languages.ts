@@ -24,10 +24,7 @@ export function resolveSelectedAudioLanguage({
 	requestedLanguage: string | null;
 	contentLocale: ContentLocale;
 }) {
-	if (
-		requestedLanguage &&
-		availableLanguages.includes(requestedLanguage as AudioLanguage)
-	) {
+	if (requestedLanguage && availableLanguages.includes(requestedLanguage as AudioLanguage)) {
 		return requestedLanguage as AudioLanguage;
 	}
 
