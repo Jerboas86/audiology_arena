@@ -14,8 +14,7 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check . && oxlint .",
 		"lint:fix": "oxlint --fix .",
-		"test:unit": "vitest",
-		"test": "pnpm run test:unit -- --run",
+		"test": "vitest run",
 		"e2e": "playwright test",
 		"types": "wrangler types && pnpm run generated:postprocess",
 		"generated:postprocess": "node scripts/postprocess-generated-files.mjs",
@@ -25,8 +24,8 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"devDependencies": {
-		"@aws-sdk/client-s3": "^3.1030.0",
-		"@inlang/paraglide-js": "^2.15.3",
+		"@aws-sdk/client-s3": "^3.1032.0",
+		"@inlang/paraglide-js": "^2.16.0",
 		"@playwright/test": "^1.59.1",
 		"@sveltejs/adapter-cloudflare": "^7.2.8",
 		"@sveltejs/kit": "^2.57.1",
@@ -39,18 +38,18 @@
 		"husky": "^9.1.7",
 		"oxlint": "^1.60.0",
 		"playwright": "^1.59.1",
-		"prettier": "^3.8.2",
+		"prettier": "^3.8.3",
 		"prettier-plugin-svelte": "^3.5.1",
-		"svelte": "^5.55.3",
+		"svelte": "^5.55.4",
 		"svelte-check": "^4.4.6",
-		"typescript": "^6.0.2",
-		"vite": "^8.0.8",
+		"typescript": "^6.0.3",
+		"vite": "^8.0.9",
 		"vite-plugin-devtools-json": "^1.0.0",
 		"vitest": "^4.1.4",
 		"vitest-browser-svelte": "^2.1.1",
-		"wrangler": "^4.82.2"
+		"wrangler": "^4.83.0"
 	},
 	"dependencies": {
-		"@neondatabase/serverless": "^1.0.2"
+		"@neondatabase/serverless": "^1.1.0"
 	}
 }
