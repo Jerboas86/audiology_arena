@@ -4,7 +4,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import flagIcon from '$lib/assets/flag.svg';
 
-	let { data = { matchup: null, matchupError: false } } = $props();
+	let { data } = $props();
 
 	const MAX_AUDIO_RETRIES = 3;
 	const AUDIO_RETRY_DELAY_MS = 1000;

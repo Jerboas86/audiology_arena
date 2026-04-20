@@ -6,12 +6,15 @@ import { buildAudioProxyUrl, resolveS3AudioUrl } from '$lib/server/audio';
 
 import { recordComparison } from '$lib/server/elo';
 import type { ComparisonInput } from '$lib/server/elo';
+import type { AudioLanguage } from '$lib/server/audio-languages';
 import type { Actions, PageServerLoad } from './$types';
 import { env } from '$env/dynamic/private';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ parent }) => {
+	const { selectedLanguage } = await parent();
+
 	try {
-		const matchup = await pickMatchup();
+		const matchup = selectedLanguage ? await pickMatchup(selectedLanguage) : null;
 		return { matchup, matchupError: false };
 	} catch (error) {
 		console.error('Failed to load matchup', error);
@@ -19,7 +22,7 @@ export const load: PageServerLoad = async () => {
 	}
 };
 
-async function pickMatchup() {
+async function pickMatchup(language: AudioLanguage) {
 	const rows = await db
 		.select({
 			token: audioSamples.token,
@@ -31,7 +34,13 @@ async function pickMatchup() {
 			audioUri: audioSamples.audioUri
 		})
 		.from(audioSamples)
-		.where(and(eq(audioSamples.status, 'completed'), isNotNull(audioSamples.audioUri)));
+		.where(
+			and(
+				eq(audioSamples.status, 'completed'),
+				isNotNull(audioSamples.audioUri),
+				eq(audioSamples.language, language)
+			)
+		);
 
 	if (rows.length < 2) return null;
 

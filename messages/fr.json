@@ -4,6 +4,7 @@
 	"nav_label": "Navigation principale",
 	"nav_arena": "Arena",
 	"nav_scores": "Scores",
+	"nav_language_label": "Langue du contenu",
 	"home_meta_description": "Comparez deux extraits audio, votez pour la meilleure proposition et enchainez les manches clairement.",
 	"home_goal_1": "Cette application classe les modèles Text To Speech selon la qualité de leur synthèse vocale pour du matériel vocal utilisé en audiologie.",
 	"home_goal_2": "L'objectif est d'identifier quels modèles et voix sont les plus adaptés à un usage clinique.",
