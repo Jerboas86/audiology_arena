@@ -1,7 +1,10 @@
 packages:
   - .
-
-onlyBuiltDependencies:
-  - esbuild
-  - sharp
-  - workerd
+engineStrict: true
+packageConfigs:
+  audiology-arena:
+    engineStrict: true
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: true
