@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import * as m from '$lib/paraglide/messages';
 	import { page } from '$app/state';
 	import { getLocale, setLocale } from '$lib/paraglide/runtime';
@@ -29,12 +28,12 @@
 		return `${page.url.pathname}${query ? `?${query}` : ''}`;
 	}
 
-	async function handleLanguageChange(event: Event) {
+	function handleLanguageChange(event: Event) {
 		const language = (event.currentTarget as HTMLSelectElement).value;
 		if (!language) return;
 
 		setLocale(contentLocaleForAudioLanguage(language), { reload: false });
-		await goto(hrefForCurrentPage(language), { invalidateAll: true });
+		window.location.assign(hrefForCurrentPage(language));
 	}
 </script>
 
