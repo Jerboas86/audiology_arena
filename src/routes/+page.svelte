@@ -3,11 +3,14 @@
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import flagIcon from '$lib/assets/flag.svg';
+	import hearingSpaceLogo from '$lib/assets/hearing-space.png?enhanced';
+	import Sponsors, { type Sponsor } from '$lib/components/Sponsors.svelte';
 
 	let { data } = $props();
 
 	const MAX_AUDIO_RETRIES = 3;
 	const AUDIO_RETRY_DELAY_MS = 1000;
+	const sponsors: Sponsor[] = [{ name: 'Hearing Space', logo: hearingSpaceLogo }];
 
 	let voted = $state(false);
 	let playedA = $state(false);
@@ -240,6 +243,13 @@
 			</div>
 		</dialog>
 	{/if}
+
+	<Sponsors
+		{sponsors}
+		eyebrow={m.home_sponsors_eyebrow()}
+		heading={m.home_sponsors_heading()}
+		body={m.home_sponsors_body()}
+	/>
 
 	<section class="support-card">
 		<div class="support-glow" aria-hidden="true"></div>

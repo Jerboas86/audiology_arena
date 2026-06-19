@@ -6,4 +6,8 @@ test('home page renders the current round UI', async ({ page }) => {
 	await expect(page.getByText('Duel actuel')).toBeVisible();
 	await expect(page.getByRole('button', { name: 'Voter pour A' })).toBeDisabled();
 	await expect(page.getByRole('button', { name: 'Voter pour B' })).toBeDisabled();
+	await expect(
+		page.getByRole('heading', { name: 'Avec le soutien de nos sponsors.' })
+	).toBeVisible();
+	await expect(page.getByRole('img', { name: 'Hearing Space' })).toBeVisible();
 });

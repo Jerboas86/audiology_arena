@@ -1,4 +1,5 @@
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
+import { enhancedImages } from '@sveltejs/enhanced-img';
 import devtoolsJson from 'vite-plugin-devtools-json';
 import { defineConfig } from 'vitest/config';
 import { sveltekit } from '@sveltejs/kit/vite';
@@ -7,6 +8,7 @@ const ignoredProjectPaths = ['**/.pnpm-store/**'];
 
 export default defineConfig({
 	plugins: [
+		enhancedImages(),
 		sveltekit(),
 		devtoolsJson(),
 		paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' })
